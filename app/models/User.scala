@@ -4,17 +4,38 @@ package models
 
 // case class User 
 
-oject User {
-  import com.mongodb.casbah.Imports._
+class User {
 
-  val id; // MongoDBObject("id" -> 0, "current" -> 0);
-  val email;
-  val pseudo;
-  val password;
+  val id = 0 // MongoDBObject("id" -> 0, "current" -> 0);
+  val email = ""
+  val pseudo = ""
+  val password = ""
+
+
+  def to_string = id + " " + email
 
 
 }
 
+object UserModel {
+  import com.mongodb.casbah.Imports._
+
+
+  // def save (u) = {
+  //   val obj =
+  //     MongoDBObject (
+  //       "id" -> Counter.next ("userid"),
+  //       "email" -> u.email,
+  //       "pseudo" -> u.pseudo,
+  //       "password" -> u.password)
+  //   Database.user.save (obj)
+  // }
+
+
+  // def findById (id) = Database.user.findOne(MongoDBObject("id" -> id))
+
+
+}
 
 // package models
 

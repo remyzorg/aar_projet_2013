@@ -9,6 +9,7 @@ object Database {
     val db = mongoClient("yolo")
 
     val counter = db("counter")
+    val user = db("user")
 }
 
 // vim: set ts=4 sw=4 et:
