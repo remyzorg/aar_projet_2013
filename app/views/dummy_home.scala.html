@@ -1,16 +1,9 @@
 @(counter: Counter)
-<!DOCTYPE html!>
-<html>
-    <head>
-        <title>Yolo</title>
-        <link href="dummy.css" rel="stylesheet" 
-              type="text/css" media="screen" />
-    </head>
-    <body>
-        <div id="main-background">
-            <div id="main-yolo">Yolo</div>
-            <div id="yolo-counter"># @counter.value</div>
-        </div>
-    </body>
-</html>
 
+@main("Yolo - " + counter.value) {
+    @menu
+    <div id="main-background">
+        <div id="main-yolo">Yolo</div>
+        <div id="yolo-counter"># @counter.value</div>
+    </div>
+}
