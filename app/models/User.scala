@@ -10,18 +10,20 @@ object UserModel {
   import com.mongodb.casbah.Imports._
 
 
-  // def save (u) = {
-  //   val obj =
-  //     MongoDBObject (
-  //       "id" -> Counter.next ("userid"),
-  //       "email" -> u.email,
-  //       "pseudo" -> u.pseudo,
-  //       "password" -> u.password)
-  //   Database.user.save (obj)
-  // }
+  
+
+  def save (u : User) = {
+    val obj =
+      MongoDBObject (
+        "id" -> Counter.next ("userid"),
+        "email" -> u.email,
+        "pseudo" -> u.pseudo,
+        "password" -> u.password)
+    Database.user.save (obj)
+  }
 
 
-  // def findById (id) = Database.user.findOne(MongoDBObject("id" -> id))
+  def findById (id : Int) = Database.user.findOne(MongoDBObject("id" -> id))
 
 
 }
