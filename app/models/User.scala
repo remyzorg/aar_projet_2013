@@ -4,18 +4,7 @@ package models
 
 // case class User 
 
-class User {
-
-  val id = 0 // MongoDBObject("id" -> 0, "current" -> 0);
-  val email = ""
-  val pseudo = ""
-  val password = ""
-
-
-  def to_string = id + " " + email
-
-
-}
+case class User (id : Int, email : String, pseudo : String, password : String)
 
 object UserModel {
   import com.mongodb.casbah.Imports._
