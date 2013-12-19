@@ -3,7 +3,8 @@ package controllers
 import play.api._
 import play.api.mvc._
 
-import models._
+import models.Finance
+import play.api.libs.concurrent.Execution.Implicits._
 
 object Application extends Controller {
 
@@ -25,4 +26,14 @@ object Application extends Controller {
     models.Counter.reset
     Application.index
   }
+
+  def currency(from: String, to: String) = Action { 
+    Async {
+      val resp = models.Finance.requestCurrency(from, to)
+      resp.map { response =>
+        Ok(views.html.finance(models.Finance.parseResponse(response)))
+      }
+    }
+  }
+
 }
