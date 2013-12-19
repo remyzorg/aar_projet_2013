@@ -31,7 +31,8 @@ object Application extends Controller {
     Async {
       val resp = models.Finance.requestCurrency(from, to)
       resp.map { response =>
-        Ok(views.html.finance(models.Finance.parseResponse(response)))
+        val (id, rate) = models.Finance.parseResponse(response)
+        Ok(views.html.finance(id, rate))
       }
     }
   }

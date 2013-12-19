@@ -12,16 +12,15 @@ object Finance {
   val api = "http://query.yahooapis.com/v1/public/yql"
   val format = "format=json"
 
-  def parseResponse(response: Response) =
-    (response.json // \ "results"
-    ).toString()// .as[String]
+  def parseResponse(response: Response) = {
+    val res = response.json \ "query" \ "results"\ "rate"
+    ((res \ "id").as[String], (res \ "Rate").as[String])
+  }
 
   def processRequest(table: String, args: String) = { 
-    val query = "select * from " ++ table ++ " where " ++ args ++ ""
-    println(query);
-    // val url = api ++ query ++ "&" ++ format
-    // val urlE = "http://" ++ java.net.URLEncoder.encode(url, "UTF-8")
-    val holder = WS.url(api).withQueryString(("q", query), ("format", "json"))
+    val query = ("q", "select * from " ++ table ++ " where " ++ args ++ "")
+    val env = ("env", "store://datatables.org/alltableswithkeys")
+    val holder = WS.url(api).withQueryString(query, ("format", "json"), env)
     val futureResponse : Future[Response] = holder.get()
     futureResponse
   }
