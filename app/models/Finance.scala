@@ -1,33 +1,42 @@
 package models
 
-import play.api._
-import play.api.mvc._
+import scala.concurrent.Future
 import play.api.libs.ws.WS._
 import play.api.libs.ws._
-import scala.concurrent.Future
 
 
-object Finance {
+abstract class Finance {
 
   val api = "http://query.yahooapis.com/v1/public/yql"
-  val format = "format=json"
-
-  def parseResponse(response: Response) = {
-    val res = response.json \ "query" \ "results"\ "rate"
-    ((res \ "id").as[String], (res \ "Rate").as[String])
-  }
+  val format = ("format", "json")
+  val env = ("env", "store://datatables.org/alltableswithkeys")  
 
   def processRequest(table: String, args: String) = { 
     val query = ("q", "select * from " ++ table ++ " where " ++ args ++ "")
-    val env = ("env", "store://datatables.org/alltableswithkeys")
-    val holder = WS.url(api).withQueryString(query, ("format", "json"), env)
+    val holder = WS.url(api).withQueryString(query, format, env)
     val futureResponse : Future[Response] = holder.get()
     futureResponse
   }
 
-  def requestCurrency(from: String, to: String) = {
-    val arg = "pair in (\"" ++ from ++ to ++"\")"
-    processRequest("yahoo.finance.xchange", arg)
-  }
+
+  // def requestQuote(name: String) = {
+  //   val arg = "symbol in (\"" ++ name ++ "\")"
+  //   processRequest("yahoo.finance.quotes", arg)
+  // }
+
+  // def parseQuoteResponse(response: Response) = {
+  //   val res = response.json \ "query" \ "results" \ "quote"
+  //   Json.prettyPrint(res)
+  // }
+
+  // def requestCurrency(from: String, to: String) = {
+  //   val arg = "pair in (\"" ++ from ++ to ++"\")"
+  //   processRequest("yahoo.finance.xchange", arg)
+  // }
+
+  // def parseCurrencyResponse(response: Response) = {
+  //   val res = response.json \ "query" \ "results"\ "rate"
+  //   ((res \ "id").as[String], (res \ "Rate").as[String])
+  // }
 
 }

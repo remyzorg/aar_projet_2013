@@ -8,8 +8,6 @@ import play.api.libs.concurrent.Execution.Implicits._
 
 object Application extends Controller {
 
-
-
   def index2 = Action {
     var current = models.Counter.getCurrent
     models.Counter.increment
@@ -27,13 +25,18 @@ object Application extends Controller {
     Application.index
   }
 
-  def currency(from: String, to: String) = Action { 
-    Async {
-      val resp = models.Finance.requestCurrency(from, to)
-      resp.map { response =>
-        val (id, rate) = models.Finance.parseResponse(response)
-        Ok(views.html.finance(id, rate))
-      }
+  def currency(from: String, to: String) = Action.async { 
+    val resp = models.Currency.request(from, to)
+    resp.map { response =>
+      val (id, rate) = models.Currency.parseResponse(response)
+      Ok(views.html.finance(id, rate))
+    }
+  }
+
+  def quote(name: String) = Action.async {
+    val resp = models.Quote.request(name)
+    resp.map { response =>
+      Ok(views.html.quote(models.Quote.parseResponse(response)))
     }
   }
 
