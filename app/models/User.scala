@@ -1,30 +1,61 @@
-
-
 package models
 
-// case class User 
+import org.bson.types.ObjectId
 
-case class User (id : Int, email : String, pseudo : String, password : String)
+case class User (id : ObjectId, email : String, username : String)
 
 object UserModel {
+  import com.github.t3hnar.bcrypt._
   import com.mongodb.casbah.Imports._
 
+  val email = "email"
+  val id = "_id"
+  val username = "username"
+  val password = "password"
 
-  
+  def toUser(obj : DBObject) = 
+    User(
+      obj.getAs[ObjectId](id).get,
+      obj.getAs[String](email).get,
+      obj.getAsOrElse(username, "Toto")
+    )
 
-  def create (u : User) = {
+  def create (user : User, newPassword : String) = {
+    val cryptedPassword = newPassword.bcrypt
+
     val obj =
       MongoDBObject (
-        "email" -> u.email,
-        "pseudo" -> u.pseudo,
-        "password" -> u.password)
-    Database.user.save (obj)
+        email -> user.email, 
+        id -> user.username, 
+        password -> cryptedPassword
+      )
+    Database.user.save(obj)
   }
 
 
-  def findById (id : Int) = Database.user.findOne(MongoDBObject("id" -> id))
+  def findById(targetId : String) = {
+    val obj = Database.user.findOne(MongoDBObject(id -> targetId))
 
+    obj match {
+      case Some(userObj) => 
+        if(userObj.containsField(email)) toUser(userObj) else None
+      case None => None
+    }
+  }
 
+  def findByEmail(targetEmail : String, targetPassword : String) = {
+    var cryptedPassword = targetPassword.bcrypt
+
+    val obj = 
+      Database.user.findOne(
+        MongoDBObject(email -> targetEmail, password -> cryptedPassword)
+      )
+   
+    obj match {
+      case Some(obj) => toUser(obj)
+      case None => None
+    }
+  }
 }
 
 // package models
