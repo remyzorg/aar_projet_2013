@@ -12,10 +12,9 @@ object UserModel {
 
   
 
-  def save (u : User) = {
+  def create (u : User) = {
     val obj =
       MongoDBObject (
-        "id" -> Counter.next ("userid"),
         "email" -> u.email,
         "pseudo" -> u.pseudo,
         "password" -> u.password)
