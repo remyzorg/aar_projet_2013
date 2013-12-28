@@ -8,22 +8,25 @@ import play.api.libs.concurrent.Execution.Implicits._
 
 object Application extends Controller {
 
-  def index2 = Action {
-    var current = models.Counter.getCurrent
-    models.Counter.increment
-    Ok(views.html.home(current));
-  }
-
   def index = Action {
-    var current = models.Counter.getCurrent
-    models.Counter.increment
-    Ok(views.html.dummy_home(current));
+    Ok(views.html.home())
   }
 
-  def reset = {
-    models.Counter.reset
-    Application.index
-  }
+  // def index = Action {
+
+    // var current = models.Counter.getCurrent
+    // models.Counter.increment
+    // Ok(views.html.home(current));
+
+  //   var current = models.Counter.getCurrent
+  //   models.Counter.increment
+  //   Ok(views.html.dummy_home(current));
+  // }
+
+  // def reset = {
+  //   models.Counter.reset
+  //   Application.index
+  // }
 
   def currency(from: String, to: String) = Action.async { 
     val resp = models.Currency.request(from, to)

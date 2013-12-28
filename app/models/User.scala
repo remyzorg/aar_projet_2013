@@ -26,7 +26,7 @@ object UserModel {
     val obj =
       MongoDBObject (
         email -> user.email, 
-        id -> user.username, 
+        username -> user.username, 
         password -> cryptedPassword
       )
     Database.user.save(obj)
@@ -43,19 +43,38 @@ object UserModel {
     }
   }
 
-  def findByEmail(targetEmail : String, targetPassword : String) = {
-    var cryptedPassword = targetPassword.bcrypt
+  def findByEmailPassword(
+    targetEmail : String,
+    targetPassword : String) = {
 
-    val obj = 
+    var cryptedPassword = targetPassword.bcrypt
+    val obj =
       Database.user.findOne(
         MongoDBObject(email -> targetEmail, password -> cryptedPassword)
       )
-   
     obj match {
       case Some(obj) => toUser(obj)
       case None => None
     }
   }
+
+
+  def findByEmail(targetEmail : String) = {
+    val obj =
+      Database.user.findOne(
+        MongoDBObject(email -> targetEmail)
+      )
+    obj match {
+      case Some(obj) => toUser(obj)
+      case None => None
+    }
+  }
+
+  def printAll = for (x <- Database.user.find ()) println (x)
+
+  def deleteAll = Database.user.remove(MongoDBObject())
+
+
 }
 
 // package models
