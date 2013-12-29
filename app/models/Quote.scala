@@ -8,7 +8,7 @@ object Quote extends Finance {
 
   def request(name: String) = {
     val arg = "symbol in (\"" ++ name ++ "\")"
-    processRequest("yahoo.finance.quotes", arg)
+    processRequest("yahoo.finance.quote", arg)
   }
 
   // def request(names: List[String]) = {

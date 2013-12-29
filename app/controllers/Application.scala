@@ -43,4 +43,11 @@ object Application extends Controller {
     }
   }
 
+  def history(name: String, from: String, to: String) = Action.async {
+    val resp = models.Historic.request(name, from, to)
+    resp.map { response =>
+      Ok(models.Historic.parseResponse(response))
+    }
+  }
+
 }
