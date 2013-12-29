@@ -11,6 +11,7 @@ POST    /signin                     controllers.Signin.submit
 GET     /signin                     controllers.Signin.setup
 
 # API to call the Yahoo finance API
+GET     /quotes                     controllers.Application.multipleQuotes
 GET     /currency/:to/:from         controllers.Application.currency(to, from)
 GET     /quote/:name                controllers.Application.quote(name)
 GET     /history/:name/:from/:to    controllers.Application.history(name, from, to)

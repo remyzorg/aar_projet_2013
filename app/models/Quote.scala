@@ -11,10 +11,10 @@ object Quote extends Finance {
     processRequest("yahoo.finance.quote", arg)
   }
 
-  // def request(names: List[String]) = {
-  //   val arg = "symbol in (\"" ++ names.makeString(",") ++ "\")"
-  //   processRequest("yahoo.finance.quotes", arg)
-  // }
+  def request(names: List[String]) = {
+    val arg = "symbol in (\"" ++ names.mkString(",") ++ "\")"
+    processRequest("yahoo.finance.quote", arg)
+  }
 
   def parseResponse(response: Response) = {
     val res = response.json \ "query" \ "results" \ "quote"
