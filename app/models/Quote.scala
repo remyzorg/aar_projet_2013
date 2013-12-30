@@ -22,7 +22,7 @@ object Quote extends Finance {
   }
 
   def getPrice(value: JsValue) = {
-    value \ "LastTracePriceOnly" 
+    value \ "LastTradePriceOnly" 
   }
 
 }

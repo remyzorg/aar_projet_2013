@@ -30,7 +30,9 @@ object FinanceAPI extends Controller {
     val resp = models.Quote.request(name)
     resp.map { response =>
       val result = models.Quote.parseResponse(response)
-      Ok(views.html.quote(Json.prettyPrint(result)))
+      val company = (result \ "Symbol").as[String]
+      val price = models.Quote.getPrice(result)
+      Ok(views.html.quote(company, price.as[String]))
     }
   }
 

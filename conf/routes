@@ -20,6 +20,9 @@ GET     /currency/:to/:from         controllers.FinanceAPI.currency(to, from)
 GET     /quote/:name                controllers.FinanceAPI.quote(name)
 GET     /history/:name/:from/:to    controllers.FinanceAPI.history(name, from, to)
 
+# Buying, selling stocks and currency operations
+GET     /quote/buy/:from        controllers.Operation.buyStock(from, number: Int ?= 1)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
