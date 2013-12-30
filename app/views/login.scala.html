@@ -1,0 +1,21 @@
+@(form: Form[(String, String)])(implicit request : Request[Any])
+
+@main("Yolo - Login") {
+<div id="login-yolo" class="container">
+	
+	@if(form.hasGlobalErrors) {
+  <ul style="color:red"l>
+		@for(error <- form.errors) {
+			<li>@error.message</li>
+	  } 
+  </ul>
+	}
+
+	<form method="post" autocomplete="on">
+    E-mail: <input type="email" name="email"><br>
+    Password:<input type="password" name="password"><br>
+    <input type="submit">
+  </form>
+
+</div>
+}
