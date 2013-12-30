@@ -5,10 +5,14 @@
 # Home page
 GET     /                           controllers.Application.index
 
-# Sign in pages
+# Sign and login in pages
 
 POST    /signin                     controllers.Signin.submit
 GET     /signin                     controllers.Signin.setup
+
+POST    /login                      controllers.Auth.login
+GET     /login                      controllers.Auth.setup
+GET     /logout                      controllers.Auth.logout
 
 # API to call the Yahoo finance API
 GET     /currency/:to/:from         controllers.Application.currency(to, from)
@@ -20,3 +24,4 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 # Dev part
 GET    /users/delete                   controllers.Signin.delete
+GET    /users/print                    controllers.Signin.print

@@ -1,4 +1,4 @@
-@(title: String)(content: Html)
+@(title: String)(content: Html)(implicit request : Request[Any]) 
 <!DOCTYPE html>
 
 <html>
@@ -17,8 +17,9 @@
                 type="text/javascript"></script>
     </head>
     <body>
-        @menu()
-        @content
+			
+      @menu()
+      @content
 
     <!--
         <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")">

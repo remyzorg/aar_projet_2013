@@ -8,7 +8,7 @@ import play.api.libs.concurrent.Execution.Implicits._
 
 object Application extends Controller {
 
-  def index = Action {
+  def index = Action { implicit request =>
     Ok(views.html.home())
   }
 

@@ -21,27 +21,28 @@ object Signin extends Controller {
     ) verifying ("Passwords must match", result =>
       result match
       {case (_, _, password, confirm) => password == confirm;}
-
     ) verifying ("This e-mail is already in use", result =>
       result match {
         case (email, _, _, _) =>
           UserModel.findByEmail(email) match {
             case None => true
-            case _ => println ("HEHO"); false
+            case _ => false
           }})
   )
 
-  def setup = Action {
-    UserModel.printAll;
+  def setup = Action { implicit request =>
     Ok(views.html.signin(form))
   }
 
+  def print = Action {
+    UserModel.printAll;
+    Ok("" + UserModel.stringAll)
+  }
   
-  def delete = Action {
+  def delete = Action { implicit request =>
     UserModel.deleteAll
     Ok(views.html.home())
   }
-
 
   def submit = Action { implicit request =>
     form.bindFromRequest.fold (

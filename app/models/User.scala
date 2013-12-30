@@ -43,17 +43,20 @@ object UserModel {
     }
   }
 
-  def findByEmailPassword(
-    targetEmail : String,
-    targetPassword : String) = {
+  def findByEmailPassword(targetEmail : String, targetPassword : String) = {
 
-    var cryptedPassword = targetPassword.bcrypt
     val obj =
       Database.user.findOne(
-        MongoDBObject(email -> targetEmail, password -> cryptedPassword)
+        MongoDBObject(email -> targetEmail)
       )
+
     obj match {
-      case Some(obj) => toUser(obj)
+      case Some(obj) =>
+        var encrypted = obj.getAs[String](password).get
+        var resalt = targetPassword.bcrypt(encrypted) 
+        if (resalt == encrypted)
+          toUser(obj)
+        else None
       case None => None
     }
   }
@@ -71,6 +74,7 @@ object UserModel {
   }
 
   def printAll = for (x <- Database.user.find ()) println (x)
+  def stringAll = Database.user.find().mkString(" ")
 
   def deleteAll = Database.user.remove(MongoDBObject())
 

@@ -1,6 +1,10 @@
-@main("Yolo  - Home") {
+@()(implicit request : Request[Any])
+
+
+@main("Yolo - Home") {
     <div id="main-yolo" class="container">
 
-
+		@(request.session.get(Security.username))
+			
     </div>
 }

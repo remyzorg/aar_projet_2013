@@ -1,3 +1,6 @@
+@()(implicit request : Request[Any])
+
+
 <div class="navbar navbar-inverse navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container">
@@ -9,10 +12,16 @@
       <a class="brand" href="#">Yolo</a>
       <div class="nav-collapse collapse">
         <ul class="nav">
-          <li class="active"><a href="#">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li class="active"><a href="/">Home</a></li>
+          <li><a href="/#about">About</a></li>
+          <li><a href="/#contact">Contact</a></li>
+					@(request.session.get(Security.username) match {
+					case Some (u) =>
+					Html("<li><a href=\"/logout\">Logout (connected as " + u + ")</a></li>")
+					case None => <li><a href="/login">Login</a></li>
+					})
         </ul>
+				
       </div><!--/.nav-collapse -->
     </div>
   </div>

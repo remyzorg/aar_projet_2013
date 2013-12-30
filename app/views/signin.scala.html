@@ -1,6 +1,6 @@
-@(form: Form[(String, String, String, String)])
+@(form: Form[(String, String, String, String)])(implicit request : Request[Any])
 
-@main("Yolo") {
+@main("Yolo - Sign in") {
 <div id="signin-yolo" class="container">
 	
 	@if(form.hasGlobalErrors) {
