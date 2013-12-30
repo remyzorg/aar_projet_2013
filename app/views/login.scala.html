@@ -4,11 +4,9 @@
 <div id="login-yolo" class="container">
 	
 	@if(form.hasGlobalErrors) {
-  <ul style="color:red"l>
 		@for(error <- form.errors) {
-			<li>@error.message</li>
+			@error_div(error.message)
 	  } 
-  </ul>
 	}
 
 	<form method="post" autocomplete="on">
@@ -16,6 +14,8 @@
     Password:<input type="password" name="password"><br>
     <input type="submit">
   </form>
+
+	<p>You don't already have an account ? Then <a href="/signup">sign up</a>
 
 </div>
 }

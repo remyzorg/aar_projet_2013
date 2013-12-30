@@ -1,14 +1,12 @@
 @(form: Form[(String, String, String, String)])(implicit request : Request[Any])
 
-@main("Yolo - Sign in") {
+@main("Yolo - Sign up") {
 <div id="signin-yolo" class="container">
 	
 	@if(form.hasGlobalErrors) {
-  <ul style="color:red"l>
 		@for(error <- form.globalErrors) {
-			<li>@error.message</li>
+		   @error_div(error.message)
 	  } 
-  </ul>
 	}
 
 	<form method="post" autocomplete="on">

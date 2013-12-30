@@ -10,7 +10,7 @@ import models._
 
 
 
-object Signin extends Controller {
+object Signup extends Controller {
 
   val form = Form(
     tuple(
@@ -31,7 +31,7 @@ object Signin extends Controller {
   )
 
   def setup = Action { implicit request =>
-    Ok(views.html.signin(form))
+    Ok(views.html.signup(form))
   }
 
   def print = Action {
@@ -46,7 +46,7 @@ object Signin extends Controller {
 
   def submit = Action { implicit request =>
     form.bindFromRequest.fold (
-      errors => BadRequest(views.html.signin(errors)),
+      errors => BadRequest(views.html.signup(errors)),
       user => user match { case (email, username, password, confirm) =>
         UserModel.create (User (new ObjectId(),
           email, username), password);

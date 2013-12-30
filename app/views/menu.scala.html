@@ -9,20 +9,33 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="brand" href="#">Yolo</a>
+      <a class="brand" href="/#">Yolo</a>
       <div class="nav-collapse collapse">
         <ul class="nav">
           <li class="active"><a href="/">Home</a></li>
           <li><a href="/#about">About</a></li>
           <li><a href="/#contact">Contact</a></li>
 					@(request.session.get(Security.username) match {
-					case Some (u) =>
-					Html("<li><a href=\"/logout\">Logout (connected as " + u + ")</a></li>")
-					case None => <li><a href="/login">Login</a></li>
+					case Some (_) =>
+					<li><a href="/logout">Logout</a></li>
+					case None =>
+					<li><button href="/signin" type="button"
+											onclick="self.location.href='/signin'"
+											class="btn btn-default navbar-btn">Sign in
+						</button></li>
+						
 					})
         </ul>
-				
+
       </div><!--/.nav-collapse -->
+
+					@(request.session.get(Security.username) match {
+					case Some (u) =>
+				Html("<p class=\"navbar-text navbar-right\">Signed in as "
+					 + "<a href=\"#\" class=\"navbar-link\">" + u + "</a></p>")
+					case None => ()
+					})
+				
     </div>
   </div>
 </div>
