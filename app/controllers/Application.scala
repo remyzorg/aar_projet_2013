@@ -28,34 +28,4 @@ object Application extends Controller {
   //   Application.index
   // }
 
-  def multipleQuotes = Action.async {
-    val resp = models.Quote.request("goog" :: "yhoo" :: "msft" :: "appl" :: Nil)
-    resp.map {
-      response =>
-      Ok(models.Quote.parseResponse(response))
-    }
-  }
-
-  def currency(from: String, to: String) = Action.async { 
-    val resp = models.Currency.request(from, to)
-    resp.map { response =>
-      val (id, rate) = models.Currency.parseResponse(response)
-      Ok(views.html.finance(id, rate))
-    }
-  }
-
-  def quote(name: String) = Action.async {
-    val resp = models.Quote.request(name)
-    resp.map { response =>
-      Ok(views.html.quote(models.Quote.parseResponse(response)))
-    }
-  }
-
-  def history(name: String, from: String, to: String) = Action.async {
-    val resp = models.Historic.request(name, from, to)
-    resp.map { response =>
-      Ok(models.Historic.parseResponse(response))
-    }
-  }
-
 }

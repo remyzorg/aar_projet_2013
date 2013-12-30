@@ -14,9 +14,8 @@ object Historic extends Finance {
   }
 
   def parseResponse(response: Response) = {
-    val res = response.json
-    // val res = response.json \ "query" \ "results" \ "quote"
-    Json.prettyPrint(res)
+    val res = response.json \ "query" \ "results" \ "quote"
+    res
   }
 
 }
