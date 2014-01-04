@@ -8,12 +8,12 @@ object Quote extends Finance {
 
   def request(name: String) = {
     val arg = "symbol in (\"" ++ name ++ "\")"
-    processRequest("yahoo.finance.quote", arg)
+    processRequest("yahoo.finance.quotes", arg)
   }
 
   def request(names: List[String]) = {
     val arg = "symbol in (\"" ++ names.mkString(",") ++ "\")"
-    processRequest("yahoo.finance.quote", arg)
+    processRequest("yahoo.finance.quotes", arg)
   }
 
   def parseResponse(response: Response) = {
@@ -21,8 +21,8 @@ object Quote extends Finance {
     res // Json.prettyPrint(res)
   }
 
-  def getPrice(value: JsValue) = {
-    value \ "LastTradePriceOnly" 
-  }
+  def getAskPrice(value: JsValue) = value \ "Ask" 
+
+  def getBidPrice(value: JsValue) = value \ "Bid"
 
 }

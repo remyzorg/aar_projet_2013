@@ -13,8 +13,17 @@ object Operation extends Controller {
     val resp = Quote.request(from)
     resp.map { response =>
       val result = Quote.parseResponse(response)
-      val price = Quote.getPrice(result)
+      val price = Quote.getBidPrice(result)
       Ok(views.html.buy(from, number, price.as[String]))
+    }
+  }
+
+  def sellStock(from: String, number: Int) = Action.async {
+    val resp = Quote.request(from)
+    resp.map { response =>
+      val result = Quote.parseResponse(response)
+      val price = Quote.getAskPrice(result)
+      Ok(views.html.sell(from, number, price.as[String]))
     }
   }
 
