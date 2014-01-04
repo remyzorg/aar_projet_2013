@@ -14,6 +14,8 @@ object Operation extends Controller {
     resp.map { response =>
       val result = Quote.parseResponse(response)
       val price = Quote.getBidPrice(result)
+      // The price.as[Double] doesn't work, for now it is the only solution
+      val res = Transaction.buy(from, price.as[String].toDouble, number)
       Ok(views.html.buy(from, number, price.as[String]))
     }
   }
@@ -23,6 +25,8 @@ object Operation extends Controller {
     resp.map { response =>
       val result = Quote.parseResponse(response)
       val price = Quote.getAskPrice(result)
+      // The price.as[Double] doesn't work, for now it is the only solution
+      val res = Transaction.sell(from, price.as[String].toDouble, number)
       Ok(views.html.sell(from, number, price.as[String]))
     }
   }
