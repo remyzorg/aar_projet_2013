@@ -17,7 +17,7 @@ object UserModel {
     User(
       obj.getAs[ObjectId](id).get,
       obj.getAs[String](email).get,
-      obj.getAsOrElse(username, "Toto")
+      obj.getAsOrElse(username, "")
     )
 
   def create (user : User, newPassword : String) = {
@@ -68,10 +68,37 @@ object UserModel {
         MongoDBObject(email -> targetEmail)
       )
     obj match {
-      case Some(obj) => toUser(obj)
+      case Some(obj) => Some(toUser(obj))
       case None => None
     }
   }
+
+
+  def updateByEmail(targetEmail : String, newEmail : Option[String],
+    newPassword : Option[String], newUsername : Option[String]) = {
+
+    val target = MongoDBObject(email -> targetEmail)
+
+    val update = MongoDBObject.newBuilder
+    newEmail match {
+      case Some (s) =>
+        Database.user.update(target, $set(email -> s))
+      case None => ()
+    }
+    newPassword match {
+      case Some (s) =>
+        Database.user.update(target, $set(password -> s.bcrypt))
+      case None => ()
+    }
+    newUsername match {
+      case Some (s) =>
+        Database.user.update(target, $set(username -> s))
+      case None => ()
+    }
+
+
+  }
+
 
   def printAll = for (x <- Database.user.find ()) println (x)
   def stringAll = Database.user.find().mkString(" ")

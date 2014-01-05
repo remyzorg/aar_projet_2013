@@ -9,33 +9,35 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="brand" href="/#">Yolo</a>
+      <a class="brand" href="@routes.Application.index">Yolo</a>
       <div class="nav-collapse collapse">
         <ul class="nav">
-          <li class="active"><a href="/">Home</a></li>
-          <li><a href="/#about">About</a></li>
-          <li><a href="/#contact">Contact</a></li>
-					@(request.session.get(Security.username) match {
-					case Some (_) =>
-					<li><a href="/logout">Logout</a></li>
-					case None =>
+          <li><a href="@routes.Application.multipleQuotes">Quote</a></li>
+
+					@request.session.get(Security.username) match {
+					case Some (u) =>{ <li class="dropdown">
+						<a href="#" class="dropdown-toggle"
+							 data-toggle="dropdown">
+							@u <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="@routes.EditAccount.setup">Edit</a></li>
+							<li><a href="@routes.Auth.logout">Logout</a></li>
+						</ul>
+					</li>
+					}
+					case None => {
 					<li><button href="/signin" type="button"
-											onclick="self.location.href='/signin'"
+											onclick="self.location.href='@routes.Auth.setup'"
 											class="btn btn-default navbar-btn">Sign in
-						</button></li>
-						
-					})
+					</button></li>
+					}
+					}
+
         </ul>
 
       </div><!--/.nav-collapse -->
 
-					@(request.session.get(Security.username) match {
-					case Some (u) =>
-				Html("<p class=\"navbar-text navbar-right\">Signed in as "
-					 + "<a href=\"#\" class=\"navbar-link\">" + u + "</a></p>")
-					case None => ()
-					})
-				
     </div>
   </div>
 </div>
+

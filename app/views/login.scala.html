@@ -1,6 +1,6 @@
 @(form: Form[(String, String)])(implicit request : Request[Any])
 
-@main("Yolo - Login") {
+@main("Yolo - Sign in") {
 <div id="login-yolo" class="container">
 	
 	@if(form.hasGlobalErrors) {
@@ -15,7 +15,9 @@
     <input type="submit">
   </form>
 
-	<p>You don't already have an account ? Then <a href="/signup">sign up</a>
+	<p>You don't already have an account ?
+		Then <a href="@routes.Signup.setup">
+			sign up</a>
 
 </div>
 }

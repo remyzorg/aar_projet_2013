@@ -14,8 +14,8 @@ object Auth extends Controller {
 
   val form = Form(
     tuple(
-      "email" -> text,
-      "password" -> text
+      "email" -> nonEmptyText,
+      "password" -> nonEmptyText
     ) verifying ("Wrong email or password", result =>
       result match
       {case (email, password) =>
@@ -48,28 +48,25 @@ object Auth extends Controller {
   }
 
 
-
 }
 
-// trait Secured {
+trait Secured {
 
-//   def username(request: RequestHeader) =
-//     request.session.get(Security.username)
+  def username(request: RequestHeader) = request.session.get(Security.username)
 
-//   def onUnauthorized(request: RequestHeader) =
-//     Results.Redirect(setup)
+  def onUnauthorized(request: RequestHeader) = Results.Redirect(routes.Auth.setup)
 
-//   def withAuth(f: => String => Request[AnyContent] => Result) = {
-//     Security.Authenticated(username, onUnauthorized) { user =>
-//       Action(request => f(user)(request))
-//     }
-//   }
+  def withAuth(f: => String => Request[AnyContent] => Result) = {
+    Security.Authenticated(username, onUnauthorized) { user =>
+      Action(request => f(user)(request))
+    }
+  }
 
-//   def withUser(f: User => Request[AnyContent] => Result) =
-//     withAuth { username => implicit request =>
-//       UserModel.findByEmail(username) match {
-//         case None => onUnauthorized(request)
-//         case user => f(user)(request)
-//       }
-//     }
-// }
+  def withUser(f: User => Request[AnyContent] => Result) =
+    withAuth { username => implicit request =>
+    UserModel.findByEmail(username) match {
+      case Some(user) => f(user)(request)
+      case None => onUnauthorized(request)
+    }
+  }
+}

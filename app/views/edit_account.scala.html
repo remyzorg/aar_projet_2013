@@ -1,0 +1,29 @@
+
+@(form: Form[EditAccountData], email : String, username : String)(implicit request : Request[Any])
+
+@main("Yolo - Edit profil") {
+<div id="login-yolo" class="container">
+	
+	@if(form.hasGlobalErrors) {
+		@for(error <- form.errors) {
+			@error_div(error.message)
+	  } 
+	}
+
+	<form method="post" autocomplete="on">
+
+		<p>You must enter your current password in order to update your credentials</p>
+    Password:<input type="password" name="password"><br>
+		
+    New e-mail: <input type="email" name="newemail" placeholder="@email"><br> 
+    New password: <input type="password" name="newpassword"
+												 placeholder="******">
+		<br>
+    New user name: <input type="text" name="newusername"
+    placeholder="@username">
+		<br>
+		<input type="submit">
+  </form>
+
+</div>
+}

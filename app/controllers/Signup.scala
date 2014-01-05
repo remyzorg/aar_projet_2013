@@ -14,10 +14,10 @@ object Signup extends Controller {
 
   val form = Form(
     tuple(
-      "email" -> text,
-      "username" -> text,
-      "password" -> text,
-      "confirm" -> text
+      "email" -> nonEmptyText,
+      "username" -> nonEmptyText,
+      "password" -> nonEmptyText,
+      "confirm" -> nonEmptyText
     ) verifying ("Passwords must match", result =>
       result match
       {case (_, _, password, confirm) => password == confirm;}
@@ -50,7 +50,8 @@ object Signup extends Controller {
       user => user match { case (email, username, password, confirm) =>
         UserModel.create (User (new ObjectId(),
           email, username), password);
-        Ok(views.html.home())
+        Redirect(routes.Application.index)
+          .withSession(Security.username -> email)
       }
     )
   }

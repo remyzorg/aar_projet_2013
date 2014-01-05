@@ -5,14 +5,17 @@
 # Home page
 GET     /                           controllers.Application.index
 
-# Sign and login in pages
+# Sign in/up and edit profil pages
 
 POST    /signup                     controllers.Signup.submit
 GET     /signup                     controllers.Signup.setup
 
-POST    /signin                      controllers.Auth.login
-GET     /signin                      controllers.Auth.setup
-GET     /logout                      controllers.Auth.logout
+POST    /signin                     controllers.Auth.login
+GET     /signin                     controllers.Auth.setup
+GET     /logout                     controllers.Auth.logout
+
+GET     /account/edit               controllers.EditAccount.setup
+POST    /account/edit               controllers.EditAccount.edit
 
 # API to call the Yahoo finance API
 GET     /quotes                     controllers.Application.multipleQuotes
