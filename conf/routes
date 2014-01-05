@@ -18,10 +18,14 @@ GET     /account/edit               controllers.EditAccount.setup
 POST    /account/edit               controllers.EditAccount.edit
 
 # API to call the Yahoo finance API
-GET     /quotes                     controllers.Application.multipleQuotes
-GET     /currency/:to/:from         controllers.Application.currency(to, from)
-GET     /quote/:name                controllers.Application.quote(name)
-GET     /history/:name/:from/:to    controllers.Application.history(name, from, to)
+GET     /quotes                     controllers.FinanceAPI.multipleQuotes
+GET     /currency/:to/:from         controllers.FinanceAPI.currency(to, from)
+GET     /quote/:name                controllers.FinanceAPI.quote(name)
+GET     /history/:name/:from/:to    controllers.FinanceAPI.history(name, from, to)
+
+# Buying, selling stocks and currency operations
+GET     /quote/buy/:from        controllers.Operation.buyStock(from, number: Int ?= 1)
+GET     /quote/sell/:from       controllers.Operation.sellStock(from, number: Int ?= 1)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

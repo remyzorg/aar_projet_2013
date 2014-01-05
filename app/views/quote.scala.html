@@ -1,5 +1,11 @@
-@(ppJson: String)
+@(company: String, bid: String, ask: String)
 
-The request returned the following informations:<br />
+<p>Be aware that the price can change between now and the time you chose to
+  buy.<br />
 
-<pre>@ppJson</pre>
+The actual buying price for @company is @bid. 
+
+You can buy one by clicking <a href="/quote/buy/@company">here</a>.<br />
+
+You can sell one for @ask <a href="/quote/sell/@company">here</a>.
+</p>

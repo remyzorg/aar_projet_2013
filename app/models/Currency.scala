@@ -15,7 +15,8 @@ object Currency extends Finance {
 
   def parseResponse(response: Response) = {
     val res = response.json \ "query" \ "results"\ "rate"
-    ((res \ "id").as[String], (res \ "Rate").as[String])
+    // ((res \ "id").as[String], (res \ "Rate").as[String])
+    (res \ "id", res \ "Rate")
   }
 
 }
