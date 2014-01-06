@@ -46,4 +46,20 @@ object FinanceAPI extends Controller {
     }
   }
 
+  // def quoteWithHistory(name: String) = Action.async { implicit request =>
+  //   val resp = models.Quote.request(name)
+  //   resp.map { response =>
+  //     val result = models.Quote.parseResponse(response)
+  //     val company = (result \ "Symbol").as[String]
+  //     val bid = models.Quote.getBidPrice(result)
+  //     val ask = models.Quote.getAskPrice(result)
+  //     // Ok(views.html.quote(company, bid.as[String], ask.as[String]))
+  //     val respHist = models.Historic.request(name)
+  //     resp.map { response =>
+  //       val resulthist = models.Historic.parseResponse(response)
+  //       Ok(views.html.history(name, resultHist))
+  //   }
+  //   }
+  // }
+
 }

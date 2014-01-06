@@ -1,7 +1,7 @@
 @(company: String, values: List[(String, Double)])(implicit request : Request[Any])
 
 @main("Yolo - History of " + company) {
-<div>
+<div class="container">
 The values from the last two weeks for @company are:<br \>
 
 <canvas id="historyChart" width="400" height="250"></canvas>
@@ -25,5 +25,5 @@ var data = {
 }
 var myNewChart = new Chart(ctx).Line(data);
 </script>
-<div>
+</div>
 }
