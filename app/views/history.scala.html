@@ -4,35 +4,32 @@
 <div>
 The values from the last two weeks for @company are:<br \>
 
-(Here will be a chart containing all the values) <br \>
-
-<canvas id="historyChart" width="400" height="400"></canvas>
+<canvas id="historyChart" width="400" height="250"></canvas>
 
 <script>
 var ctx = $("#historyChart").get(0).getContext("2d");
-<!-- var label = [  @for((date, price) <- values) { -->
-<!--                         <li>@date: @price</li> -->
-<!--                         } -->
+var dates = [ @for((date, _) <- values) { "@date", } ]
+var prices = [ @for((_, price) <- values) { @price, } ]
 
 var data = {
-	labels : ["January","February","March","April","May","June","July"],
+	labels : dates,
 	datasets : [
 		{
 			fillColor : "rgba(220,220,220,0.5)",
 			strokeColor : "rgba(220,220,220,1)",
 			pointColor : "rgba(220,220,220,1)",
 			pointStrokeColor : "#fff",
-			data : [65,59,90,81,56,55,40]
+			data : prices
 		}
 	]
 }
 var myNewChart = new Chart(ctx).Line(data);
 </script>
 
-<ul>
-  @for((date, price) <- values) {
-                        <li>@date: @price</li>
-                        }
-</ul>
+<!-- <ul> -->
+<!--   @for((date, price) <- values) { -->
+<!--                         <li>@date: @price</li> -->
+<!--                         } -->
+<!-- </ul> -->
 <div>
 }
