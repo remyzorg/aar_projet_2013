@@ -37,11 +37,12 @@ object FinanceAPI extends Controller {
     }
   }
 
-  def history(name: String, from: String, to: String) = Action.async {
-    val resp = models.Historic.request(name, from, to)
+  def history(name: String) = Action.async {
+    val resp = models.Historic.request(name)
     resp.map { response =>
-      val result = models.Historic.parseResponse(response)
-      Ok(Json.prettyPrint(result))
+      // val result = models.Historic.parseResponse(response)
+      val result = models.Historic.getWeekHistory(response)
+      Ok(views.html.history(name, result))
     }
   }
 
