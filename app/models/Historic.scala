@@ -22,14 +22,9 @@ object Historic extends Finance {
     processRequest("yahoo.finance.historicaldata", arg)
   }
 
-  def parseResponse(response: Response) = {
-    val res = response.json \ "query" \ "results" \ "quote"
-    res
-  }
-
   //Returns a (string * double) list containing the date and the corresponding value
-  def getWeekHistory(response: Response) = {
-    val historyJson = parseResponse(response)
+  def parseResponse(response: Response) = {
+    val historyJson = response.json \ "query" \ "results" \ "quote"
     val sequence = historyJson.as[JsArray].value
     val res = sequence.foldLeft(List.empty[(String, Double)])(
       (l, json) => 

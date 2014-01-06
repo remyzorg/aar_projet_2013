@@ -10,11 +10,12 @@ import play.api.libs.json.Json
 object FinanceAPI extends Controller {
 
   def multipleQuotes = Action.async { implicit request =>
-    val resp = models.Quote.request("goog" :: "yhoo" :: "msft" :: "appl" :: Nil)
+    val resp = models.Quote.request("goog" :: "yhoo" :: "msft" :: "aapl" :: Nil)
     resp.map {
       response =>
       val result = models.Quote.parseResponse(response)
-      Ok(Json.prettyPrint(result))
+      val values = models.Quote.getMultipleValues(result)
+      Ok(views.html.quotes(values))
     }
   }
 
@@ -40,8 +41,7 @@ object FinanceAPI extends Controller {
   def history(name: String) = Action.async { implicit request =>
     val resp = models.Historic.request(name)
     resp.map { response =>
-      // val result = models.Historic.parseResponse(response)
-      val result = models.Historic.getWeekHistory(response)
+      val result = models.Historic.parseResponse(response)
       Ok(views.html.history(name, result))
     }
   }
