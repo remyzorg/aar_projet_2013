@@ -1,12 +1,17 @@
 package models
 
 import org.bson.types.ObjectId
+import com.mongodb.casbah.Imports._
+
+
 
 case class User (
   id : ObjectId,
   email : String,
   username : String,
-  capital : Double)
+  capital : Double,
+  quotes : Map[String, Int]
+)
 
 object UserModel {
   import com.github.t3hnar.bcrypt._
@@ -17,8 +22,9 @@ object UserModel {
   val username = "username"
   val password = "password"
   val capital = "capital"
+  val quotes = "quotes"
 
-  def toUser(obj : DBObject) = 
+  def toUser(obj : DBObject) =
     User(
       obj.getAs[ObjectId](id).get,
       obj.getAs[String](email).get,
@@ -26,8 +32,15 @@ object UserModel {
       obj.getAs[Double](capital) match {
         case Some (d) => d
         case None => 0.0
+      },
+      obj.getAs[DBObject](quotes) match {
+        case Some (m : DBObject) => { val m2 : MongoDBObject = m;
+          m2.toMap[String, AnyRef] match {
+            case x: Map[String,Int] => x
+            case _ => Map.empty[String, Int]}
+        }
+        case None => Map.empty[String, Int]
       }
-
     )
 
   def create (user : User, newPassword : String) = {
@@ -38,7 +51,8 @@ object UserModel {
         email -> user.email, 
         username -> user.username, 
         password -> cryptedPassword,
-        capital -> user.capital
+        capital -> user.capital,
+        quotes -> user.quotes.asDBObject
       )
     Database.user.save(obj)
   }
@@ -84,7 +98,6 @@ object UserModel {
     newPassword : Option[String], newUsername : Option[String]) = {
 
     val target = MongoDBObject(email -> targetEmail)
-    val update = MongoDBObject.newBuilder
 
     newEmail match {
       case Some (s) =>
@@ -103,18 +116,21 @@ object UserModel {
     }
   }
 
+
   def opCapital(targetEmail: String, value: Double,
     op : (Double, Double) => Double){
 
     val target = MongoDBObject(email -> targetEmail)
-    val update = MongoDBObject.newBuilder
-
     val obj = Database.user.findOne(target)
 
     obj match {
       case Some(obj) =>
         Database.user.update(target,
-          $set(capital -> op (obj.as[Double](capital), value)))
+          $set(capital -> op (
+            obj.getAs[Double](capital) match {
+              case None => 0.0
+              case Some (current) => current},
+            value)))
       case None => ()
     }
   }
@@ -122,9 +138,23 @@ object UserModel {
 
   def opQuoteByCompany(targetEmail: String,
     from: String,
-    quote: Int,
+    value: Int,
     op: (Int, Int) => Int) {
 
+    val target = MongoDBObject(email -> targetEmail)
+    val obj = Database.user.findOne(target)
+
+    obj match {
+      case Some(obj) =>
+        Database.user.update(target,
+          $set((quotes + "." + from) -> op (
+            obj.getAs[DBObject](quotes) match {
+              case Some (m) => m.getAs[Int](from) match {
+                case Some (i) => i case None => 0}
+              case None =>  0},
+            value)))
+      case None => ()
+    }
   }
 
 

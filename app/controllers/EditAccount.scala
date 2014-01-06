@@ -53,7 +53,7 @@ object EditAccount extends Controller with Secured {
       case Some (s) =>
         UserModel.findByEmail(s) match {
           case None => None
-          case Some(User(_, email, username, _)) => Some (email, username)
+          case Some(u) => Some (u.email, u.username)
         }
       case None => None
     }
@@ -66,15 +66,34 @@ object EditAccount extends Controller with Secured {
         else UserModel.opCapital(mail, value, (_-_));
 
         UserModel.findByEmail(mail) match {
-          case None => Ok("Not connected")
-          case Some(User(_, email, username, capital)) =>
+          case None => onUnauthorized(request)
+          case Some(u) =>
             val opstr = if (op) "adding" else "substracting"
             Ok(opstr + " " + value + " to capital" + "\n" +
-              "current: " + capital)
+              "current: " + u.capital)
         }
-      case None => Ok("Error : not connected")
+      case None => onUnauthorized(request)
     }
   }
+
+
+  def opQuote (from : String, value : Int, op : Boolean) =
+    Action { implicit request =>
+    request.session.get(Security.username) match {
+      case Some (mail) =>
+        if (op) UserModel.opQuoteByCompany(mail, from, value, (_+_))
+        else UserModel.opQuoteByCompany(mail, from, value, (_-_));
+        UserModel.findByEmail(mail) match {
+          case None => onUnauthorized(request)
+          case Some(u) =>
+            val opstr = if (op) "adding" else "substracting"
+            Ok(opstr + " " + value + " to " + from + "\n" +
+              "current: " + u.quotes.mkString(" "))
+        }
+      case None => onUnauthorized(request)
+    }
+  }
+  
 
   def setup = Action { implicit request : Request[Any] =>
     getFillingContent(request) match {
