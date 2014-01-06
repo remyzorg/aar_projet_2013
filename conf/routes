@@ -32,5 +32,7 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 
 # Dev part
-GET    /users/delete                   controllers.Signup.delete
-GET    /users/print                    controllers.Signup.print
+GET    /users/delete                controllers.Signup.delete
+GET    /users/printall              controllers.Signup.print
+GET    /capital/add/:value          controllers.EditAccount.opCapital(value:Double, op : Boolean=true)
+GET    /capital/sub/:value          controllers.EditAccount.opCapital(value:Double, op : Boolean=false)

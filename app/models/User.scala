@@ -2,7 +2,11 @@ package models
 
 import org.bson.types.ObjectId
 
-case class User (id : ObjectId, email : String, username : String)
+case class User (
+  id : ObjectId,
+  email : String,
+  username : String,
+  capital : Double)
 
 object UserModel {
   import com.github.t3hnar.bcrypt._
@@ -12,12 +16,18 @@ object UserModel {
   val id = "_id"
   val username = "username"
   val password = "password"
+  val capital = "capital"
 
   def toUser(obj : DBObject) = 
     User(
       obj.getAs[ObjectId](id).get,
       obj.getAs[String](email).get,
-      obj.getAsOrElse(username, "")
+      obj.getAsOrElse(username, ""),
+      obj.getAs[Double](capital) match {
+        case Some (d) => d
+        case None => 0.0
+      }
+
     )
 
   def create (user : User, newPassword : String) = {
@@ -27,7 +37,8 @@ object UserModel {
       MongoDBObject (
         email -> user.email, 
         username -> user.username, 
-        password -> cryptedPassword
+        password -> cryptedPassword,
+        capital -> user.capital
       )
     Database.user.save(obj)
   }
@@ -43,12 +54,9 @@ object UserModel {
     }
   }
 
-  def findByEmailPassword(targetEmail : String, targetPassword : String) = {
 
-    val obj =
-      Database.user.findOne(
-        MongoDBObject(email -> targetEmail)
-      )
+  def findByEmailPassword(targetEmail : String, targetPassword : String) = {
+    val obj = Database.user.findOne(MongoDBObject(email -> targetEmail))
 
     obj match {
       case Some(obj) =>
@@ -63,10 +71,8 @@ object UserModel {
 
 
   def findByEmail(targetEmail : String) = {
-    val obj =
-      Database.user.findOne(
-        MongoDBObject(email -> targetEmail)
-      )
+    val obj = Database.user.findOne(MongoDBObject(email -> targetEmail))
+
     obj match {
       case Some(obj) => Some(toUser(obj))
       case None => None
@@ -78,8 +84,8 @@ object UserModel {
     newPassword : Option[String], newUsername : Option[String]) = {
 
     val target = MongoDBObject(email -> targetEmail)
-
     val update = MongoDBObject.newBuilder
+
     newEmail match {
       case Some (s) =>
         Database.user.update(target, $set(email -> s))
@@ -95,49 +101,39 @@ object UserModel {
         Database.user.update(target, $set(username -> s))
       case None => ()
     }
+  }
 
+  def opCapital(targetEmail: String, value: Double,
+    op : (Double, Double) => Double){
+
+    val target = MongoDBObject(email -> targetEmail)
+    val update = MongoDBObject.newBuilder
+
+    val obj = Database.user.findOne(target)
+
+    obj match {
+      case Some(obj) =>
+        Database.user.update(target,
+          $set(capital -> op (obj.as[Double](capital), value)))
+      case None => ()
+    }
+  }
+
+
+  def opQuoteByCompany(targetEmail: String,
+    from: String,
+    quote: Int,
+    op: (Int, Int) => Int) {
 
   }
 
 
   def printAll = for (x <- Database.user.find ()) println (x)
   def stringAll = Database.user.find().mkString(" ")
-
   def deleteAll = Database.user.remove(MongoDBObject())
 
 
+
+
+
 }
-
-// package models
-
-// case class Counter(value: Int)
-
-// object Counter {
-//     import com.mongodb.casbah.Imports._
-
-//     val zeroCounter = MongoDBObject("id" -> 0, "current" -> 0)
-//     val idQuery = MongoDBObject("id" -> 0)
-
-//     def set = {
-//         Database.counter.save(zeroCounter)
-//         Some(zeroCounter)
-//     }
-
-//     def reset = 
-//         Database.counter
-//             .findAndModify(idQuery, zeroCounter)
-//             .orElse(Counter.set)
-
-//     def getCurrent = {
-//         val counterObject = Database.counter.findOne(idQuery)
-//         val value = 
-//             counterObject
-//                 .orElse(Counter.set).get
-//                 .getAsOrElse("current", 0)
-//         Counter(value)
-//     }
-
-//     def increment = Database.counter.update(idQuery, $inc("current" -> 1))
-// }
-
-// vim: set ts=4 sw=4 et:

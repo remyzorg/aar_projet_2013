@@ -53,13 +53,28 @@ object EditAccount extends Controller with Secured {
       case Some (s) =>
         UserModel.findByEmail(s) match {
           case None => None
-          case Some(User(_, email, username)) => Some (email, username)
+          case Some(User(_, email, username, _)) => Some (email, username)
         }
       case None => None
     }
   }
 
+  def opCapital (value : Double, op : Boolean) = Action { implicit request =>
+    request.session.get(Security.username) match {
+      case Some (mail) =>
+        if (op) UserModel.opCapital(mail, value, (_+_))
+        else UserModel.opCapital(mail, value, (_-_));
 
+        UserModel.findByEmail(mail) match {
+          case None => Ok("Not connected")
+          case Some(User(_, email, username, capital)) =>
+            val opstr = if (op) "adding" else "substracting"
+            Ok(opstr + " " + value + " to capital" + "\n" +
+              "current: " + capital)
+        }
+      case None => Ok("Error : not connected")
+    }
+  }
 
   def setup = Action { implicit request : Request[Any] =>
     getFillingContent(request) match {
