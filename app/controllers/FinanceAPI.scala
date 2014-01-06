@@ -26,7 +26,7 @@ object FinanceAPI extends Controller {
     }
   }
 
-  def quote(name: String) = Action.async {
+  def quote(name: String) = Action.async { 
     val resp = models.Quote.request(name)
     resp.map { response =>
       val result = models.Quote.parseResponse(response)
@@ -37,7 +37,7 @@ object FinanceAPI extends Controller {
     }
   }
 
-  def history(name: String) = Action.async {
+  def history(name: String) = Action.async { implicit request =>
     val resp = models.Historic.request(name)
     resp.map { response =>
       // val result = models.Historic.parseResponse(response)
