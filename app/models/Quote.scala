@@ -21,6 +21,22 @@ object Quote extends Finance {
     res // Json.prettyPrint(res)
   }
 
+  def getMultipleValues(json: JsValue) : List[(String, Double, Double)] = {
+    val sequence = json.as[JsArray].value
+    def fun(acc: List[(String, Double, Double)], json: JsValue) = {
+      val ask = getAskPrice(json)
+      val bid = getBidPrice(json)
+      if (ask.isInstanceOf[JsValue]) {
+        ((json \ "symbol").as[String], // 0.0, 0.0)
+          ask.as[String].toDouble,
+          bid.as[String].toDouble) :: acc
+      } else { acc }
+    }
+    
+    val res = sequence.foldLeft(List.empty[(String, Double, Double)])(fun)
+    res
+  }
+
   def getAskPrice(value: JsValue) = value \ "Ask" 
 
   def getBidPrice(value: JsValue) = value \ "Bid"

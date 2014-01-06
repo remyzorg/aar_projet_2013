@@ -9,16 +9,17 @@ import play.api.libs.json.Json
 
 object FinanceAPI extends Controller {
 
-  def multipleQuotes = Action.async {
-    val resp = models.Quote.request("goog" :: "yhoo" :: "msft" :: "appl" :: Nil)
+  def multipleQuotes = Action.async { implicit request =>
+    val resp = models.Quote.request("goog" :: "yhoo" :: "msft" :: "aapl" :: Nil)
     resp.map {
       response =>
       val result = models.Quote.parseResponse(response)
-      Ok(Json.prettyPrint(result))
+      val values = models.Quote.getMultipleValues(result)
+      Ok(views.html.quotes(values))
     }
   }
 
-  def currency(from: String, to: String) = Action.async { 
+  def currency(from: String, to: String) = Action.async { implicit request =>
     val resp = models.Currency.request(from, to)
     resp.map { response =>
       val (id, rate) = models.Currency.parseResponse(response)
@@ -26,7 +27,7 @@ object FinanceAPI extends Controller {
     }
   }
 
-  def quote(name: String) = Action.async { 
+  def quote(name: String) = Action.async { implicit request =>
     val resp = models.Quote.request(name)
     resp.map { response =>
       val result = models.Quote.parseResponse(response)
@@ -40,10 +41,25 @@ object FinanceAPI extends Controller {
   def history(name: String) = Action.async { implicit request =>
     val resp = models.Historic.request(name)
     resp.map { response =>
-      // val result = models.Historic.parseResponse(response)
-      val result = models.Historic.getWeekHistory(response)
+      val result = models.Historic.parseResponse(response)
       Ok(views.html.history(name, result))
     }
   }
+
+  // def quoteWithHistory(name: String) = Action.async { implicit request =>
+  //   val resp = models.Quote.request(name)
+  //   resp.map { response =>
+  //     val result = models.Quote.parseResponse(response)
+  //     val company = (result \ "Symbol").as[String]
+  //     val bid = models.Quote.getBidPrice(result)
+  //     val ask = models.Quote.getAskPrice(result)
+  //     // Ok(views.html.quote(company, bid.as[String], ask.as[String]))
+  //     val respHist = models.Historic.request(name)
+  //     resp.map { response =>
+  //       val resulthist = models.Historic.parseResponse(response)
+  //       Ok(views.html.history(name, resultHist))
+  //   }
+  //   }
+  // }
 
 }
