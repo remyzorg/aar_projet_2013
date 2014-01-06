@@ -9,7 +9,7 @@ import models._
 
 object Operation extends Controller {
 
-  def buyStock(from: String, number: Int) = Action.async {
+  def buyStock(from: String, number: Int) = Action.async { implicit request =>
     val resp = Quote.request(from)
     resp.map { response =>
       val result = Quote.parseResponse(response)
@@ -20,7 +20,7 @@ object Operation extends Controller {
     }
   }
 
-  def sellStock(from: String, number: Int) = Action.async {
+  def sellStock(from: String, number: Int) = Action.async { implicit request =>
     val resp = Quote.request(from)
     resp.map { response =>
       val result = Quote.parseResponse(response)

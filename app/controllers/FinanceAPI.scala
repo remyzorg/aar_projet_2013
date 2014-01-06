@@ -9,7 +9,7 @@ import play.api.libs.json.Json
 
 object FinanceAPI extends Controller {
 
-  def multipleQuotes = Action.async {
+  def multipleQuotes = Action.async { implicit request =>
     val resp = models.Quote.request("goog" :: "yhoo" :: "msft" :: "appl" :: Nil)
     resp.map {
       response =>
@@ -18,7 +18,7 @@ object FinanceAPI extends Controller {
     }
   }
 
-  def currency(from: String, to: String) = Action.async { 
+  def currency(from: String, to: String) = Action.async { implicit request =>
     val resp = models.Currency.request(from, to)
     resp.map { response =>
       val (id, rate) = models.Currency.parseResponse(response)
@@ -26,7 +26,7 @@ object FinanceAPI extends Controller {
     }
   }
 
-  def quote(name: String) = Action.async { 
+  def quote(name: String) = Action.async { implicit request =>
     val resp = models.Quote.request(name)
     resp.map { response =>
       val result = models.Quote.parseResponse(response)

@@ -1,5 +1,6 @@
-@(company: String, bid: String, ask: String)
+@(company: String, bid: String, ask: String)(implicit request : Request[Any])
 
+@main("Yolo - Quote prices for " + company) {
 <p>Be aware that the price can change between now and the time you chose to
   buy.<br />
 
@@ -9,3 +10,4 @@ You can buy one by clicking <a href="/quote/buy/@company">here</a>.<br />
 
 You can sell one for @ask <a href="/quote/sell/@company">here</a>.
 </p>
+}
