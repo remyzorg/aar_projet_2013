@@ -21,7 +21,7 @@ POST    /account/edit               controllers.EditAccount.edit
 GET     /quotes                     controllers.FinanceAPI.multipleQuotes
 GET     /currency/:to/:from         controllers.FinanceAPI.currency(to, from)
 GET     /quote/:name                controllers.FinanceAPI.quote(name)
-GET     /history/:name/:from/:to    controllers.FinanceAPI.history(name, from, to)
+GET     /history/:name              controllers.FinanceAPI.history(name)
 
 # Buying, selling stocks and currency operations
 GET     /quote/buy/:from        controllers.Operation.buyStock(from, number: Int ?= 1)
