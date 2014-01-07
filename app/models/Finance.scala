@@ -3,7 +3,8 @@ package models
 import scala.concurrent.Future
 import play.api.libs.ws.WS._
 import play.api.libs.ws._
-
+import play.api.libs.json._
+import play.api.data.validation.ValidationError
 
 abstract class Finance {
 
@@ -17,7 +18,11 @@ abstract class Finance {
     val futureResponse : Future[Response] = holder.get()
     futureResponse
   }
-
+  
+  def parseBodyResponse(response: Response) = {
+    val res = response.json \ "query" \ "results"
+    res // Json.prettyPrint(res)
+  }
 
   // def requestQuote(name: String) = {
   //   val arg = "symbol in (\"" ++ name ++ "\")"

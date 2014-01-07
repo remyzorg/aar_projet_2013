@@ -24,11 +24,16 @@ object Historic extends Finance {
 
   //Returns a (string * double) list containing the date and the corresponding value
   def parseResponse(response: Response) = {
-    val historyJson = response.json \ "query" \ "results" \ "quote"
+    val historyJson = parseBodyResponse(response) \ "quote"
     val sequence = historyJson.as[JsArray].value
     val res = sequence.foldLeft(List.empty[(String, Double)])(
       (l, json) => 
-      (((json \ "Date").as[String]),((json \ "High").as[String].toDouble))  :: l)
+      try {
+        (((json \ "Date").as[String]),((json \ "High").as[String].toDouble)) :: l
+      } catch {
+        case e: JsResultException => l
+      })
+
     res
   }
 

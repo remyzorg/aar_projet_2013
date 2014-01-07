@@ -17,20 +17,24 @@ object Quote extends Finance {
   }
 
   def parseResponse(response: Response) = {
-    val res = response.json \ "query" \ "results" \ "quote"
+    val res = parseBodyResponse(response) \ "quote"
     res // Json.prettyPrint(res)
   }
 
   def getMultipleValues(json: JsValue) : List[(String, Double, Double)] = {
     val sequence = json.as[JsArray].value
     def fun(acc: List[(String, Double, Double)], json: JsValue) = {
-      val ask = getAskPrice(json)
-      val bid = getBidPrice(json)
-      if (ask.isInstanceOf[JsValue]) {
-        ((json \ "symbol").as[String], // 0.0, 0.0)
-          ask.as[String].toDouble,
-          bid.as[String].toDouble) :: acc
-      } else { acc }
+      try {
+        val ask = getAskPrice(json)
+        val bid = getBidPrice(json)
+        if (ask.isInstanceOf[JsValue]) {
+          ((json \ "symbol").as[String], // 0.0, 0.0)
+            ask.as[String].toDouble,
+            bid.as[String].toDouble) :: acc
+        } else { acc }
+      } catch {
+        case e: JsResultException => acc
+      }
     }
     
     val res = sequence.foldLeft(List.empty[(String, Double, Double)])(fun)
