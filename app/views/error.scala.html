@@ -1,0 +1,9 @@
+@(error: String)(implicit request: Request[Any])
+
+@main("Bad Request") {
+  <div class="container">
+    @error <br />
+    Be aware that the External Yahoo API can sometime not repond, so you should
+    refresh if you're sure about what you requested.
+  </div>
+}

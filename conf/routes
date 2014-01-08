@@ -20,7 +20,7 @@ POST    /account/edit               controllers.EditAccount.edit
 # API to call the Yahoo finance API
 GET     /quotes                     controllers.FinanceAPI.multipleQuotes
 GET     /currency/:to/:from         controllers.FinanceAPI.currency(to, from)
-GET     /quote/:name                controllers.FinanceAPI.quote(name)
+GET     /quote/:name                controllers.FinanceAPI.quoteWithHistory(name)
 GET     /history/:name              controllers.FinanceAPI.history(name)
 
 # Buying, selling stocks and currency operations
