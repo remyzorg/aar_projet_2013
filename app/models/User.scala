@@ -16,7 +16,7 @@ case class User (
 )
 
 case class TransactionObject (
-  id : ObjectId,
+  // id : ObjectId,
   action : String,
   quote : String,
   price : Double,
@@ -43,7 +43,7 @@ object UserModel {
 
   def toTransaction(obj: DBObject) = 
     TransactionObject (
-      obj.getAs[ObjectId](id).get,
+      // obj.getAs[ObjectId](id).get,
       obj.getAs[String](action).get,
       obj.getAs[String](quote).get,
       obj.getAs[Double](price).get,
@@ -82,7 +82,7 @@ object UserModel {
         case None => Map.empty[String, Int]
       }, 
       obj.getAs[MongoDBList](transactions) match {
-        case Some (m : DBObject) => { val m2 : MongoDBList = m;
+        case Some (m : MongoDBList) => { val m2 : MongoDBList = m;
           m2.toList.asInstanceOf[List[DBObject]]
             .map { obj => toTransaction(obj) }
         }
@@ -187,7 +187,6 @@ object UserModel {
   def opQuoteByCompany(targetEmail: String,
     from: String,
     value: Int,
-    // transaction: TransactionObject,
     op: (Int, Int) => Int) {
 
     val target = MongoDBObject(email -> targetEmail)
@@ -202,6 +201,20 @@ object UserModel {
                 case Some (i) => i case None => 0}
               case None =>  0},
             value)))
+      case None => ()
+    }
+
+  }
+
+
+  def opTransaction(targetEmail: String, transaction: TransactionObject) = {
+    val target = MongoDBObject(email -> targetEmail)
+    val obj = Database.user.findOne(target)
+
+    obj match {
+      case Some(obj) =>
+        Database.user.update(target, 
+          $push(transactions -> createTransactionObject(transaction)))
       case None => ()
     }
   }

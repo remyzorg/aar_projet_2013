@@ -28,6 +28,7 @@ object Transaction {
 
     UserModel.opCapital(email, money, (_-_))
     UserModel.opQuoteByCompany(email, from, number, (_+_))
+    UserModel.opTransaction(email, TransactionObject("Buy", from, price, number, 0.0))
   }
 
 
@@ -48,6 +49,7 @@ object Transaction {
 
     UserModel.opCapital(email, money, (_+_))
     UserModel.opQuoteByCompany(email, from, number, (_-_))
+    UserModel.opTransaction(email, TransactionObject("Sell", from, price, number, 0.0))
   }
 
 }
