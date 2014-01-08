@@ -1,4 +1,4 @@
-@(company: String, bid: String, ask: String)(implicit request : Request[Any])
+@(company: String, bid: String, ask: String, values: List[(String, Double)])(implicit request : Request[Any])
 
 @main("Yolo - Quote prices for " + company) {
 <div class="container">
@@ -12,8 +12,28 @@
     You can sell one for @ask <a href="/quote/sell/@company">here</a>. <br />
     <br />
 
-    You can acces to the recent historic of this company 
-    <a href="/history/@company"> here</a>.
+    <canvas id="historyChart" width="400" height="250"></canvas>
+
+    <script>
+      var ctx = $("#historyChart").get(0).getContext("2d");
+      var dates = [ @for((date, _) <- values) { "@date", } ]
+      var prices = [ @for((_, price) <- values) { @price, } ]
+      
+      var data = {
+      	labels : dates,
+      	datasets : [
+      		{
+      			fillColor : "rgba(220,220,220,0.5)",
+      			strokeColor : "rgba(220,220,220,1)",
+      			pointColor : "rgba(220,220,220,1)",
+      			pointStrokeColor : "#fff",
+      			data : prices
+      		}
+      	]
+      }
+      var myNewChart = new Chart(ctx).Line(data);
+      </script>
+      
   </p>
 </div>
 }
