@@ -8,6 +8,7 @@ import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json._
 import scala.concurrent._
 import scala.concurrent.duration._
+import scala.language.postfixOps
 
 object FinanceAPI extends Controller {
 
@@ -22,7 +23,8 @@ object FinanceAPI extends Controller {
       } catch {
         case e: JsResultException => 
           BadRequest(
-            views.html.error("The quotes you requested doesn't have value, or the external API responded badly"))
+            views.html.error("The quotes you requested doesn't have value"
+              + ", or the external API responded badly"))
       }
     }
   }
@@ -35,21 +37,21 @@ object FinanceAPI extends Controller {
     }
   }
 
-  // def quote(name: String) = Action.async { implicit request =>
-  //   val resp = models.Quote.request(name)
-  //   resp.map { response =>
-  //     val result = models.Quote.parseResponse(response)
-  //     try {
-  //       val company = (result \ "Symbol").as[String]
-  //       val bid = models.Quote.getBidPrice(result)
-  //       val ask = models.Quote.getAskPrice(result)
-  //       Ok(views.html.quote(company, bid.as[String], ask.as[String]))
-  //     } catch {
-  //       case e: JsResultException => 
-  //         BadRequest(views.html.error("The Quote requested doesn't exist or have value"))
-  //     }
-  //   }
-  // }
+  def quote(name: String) = Action.async { implicit request =>
+    val resp = models.Quote.request(name)
+    resp.map { response =>
+      val result = models.Quote.parseResponse(response)
+      try {
+        val company = (result \ "Symbol").as[String]
+        val bid = models.Quote.getBidPrice(result)
+        val ask = models.Quote.getAskPrice(result)
+        Ok(views.html.quote(company, bid.as[String], ask.as[String], Nil))
+      } catch {
+        case e: JsResultException => 
+          BadRequest(views.html.error("The Quote requested doesn't exist or have value"))
+      }
+    }
+  }
 
   def history(name: String) = Action.async { implicit request =>
     val resp = models.Historic.request(name)
@@ -82,5 +84,4 @@ object FinanceAPI extends Controller {
       }
     }
   }
-
 }

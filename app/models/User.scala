@@ -10,7 +10,17 @@ case class User (
   email : String,
   username : String,
   capital : Double,
-  quotes : Map[String, Int]
+  quotes : Map[String, Int],
+  transactions : List[TransactionObject]
+)
+
+case class TransactionObject (
+  id : ObjectId,
+  action : String,
+  quote : String,
+  price : Double,
+  number : Int,
+  capital : Double
 )
 
 object UserModel {
@@ -23,6 +33,37 @@ object UserModel {
   val password = "password"
   val capital = "capital"
   val quotes = "quotes"
+  val transactions = "transactions"
+  
+  val action = "action"
+  val quote = "quote"
+  val price = "price"
+  val number = "number"
+
+  def toTransaction(obj: DBObject) = 
+    TransactionObject (
+      obj.getAs[ObjectId](id).get,
+      obj.getAs[String](action).get,
+      obj.getAs[String](quote).get,
+      obj.getAs[Double](price).get,
+      obj.getAs[Int](number).get,
+      obj.getAs[Double](capital).get
+    )
+
+  def createTransactionObject(tr : TransactionObject) =
+    MongoDBObject (
+      action -> tr.action,
+      quote -> tr.quote,
+      price -> tr.price,
+      number -> tr.number,
+      capital -> tr.capital
+    )
+
+  def createTransactionList(tr : List[TransactionObject]) = {
+    val builder = MongoDBList.newBuilder
+    for (t <- tr) builder += tr;
+    builder.result
+  }
 
   def toUser(obj : DBObject) =
     User(
@@ -38,6 +79,13 @@ object UserModel {
           m2.toMap[String, AnyRef].asInstanceOf[Map[String, Int]]
         }
         case None => Map.empty[String, Int]
+      }, 
+      obj.getAs[MongoDBList](transactions) match {
+        case Some (m : DBObject) => { val m2 : MongoDBList = m;
+          m2.toList.asInstanceOf[List[DBObject]]
+            .map { obj => toTransaction(obj) }
+        }
+        case None => Nil
       }
     )
 
@@ -50,7 +98,8 @@ object UserModel {
         username -> user.username, 
         password -> cryptedPassword,
         capital -> user.capital,
-        quotes -> user.quotes.asDBObject
+        quotes -> user.quotes.asDBObject,
+        transactions -> createTransactionList(user.transactions)
       )
     Database.user.save(obj)
   }
@@ -137,6 +186,7 @@ object UserModel {
   def opQuoteByCompany(targetEmail: String,
     from: String,
     value: Int,
+    // transaction: TransactionObject,
     op: (Int, Int) => Int) {
 
     val target = MongoDBObject(email -> targetEmail)
@@ -159,9 +209,6 @@ object UserModel {
   def printAll = for (x <- Database.user.find ()) println (x)
   def stringAll = Database.user.find().mkString(" ")
   def deleteAll = Database.user.remove(MongoDBObject())
-
-
-
 
 
 }
