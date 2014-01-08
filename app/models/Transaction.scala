@@ -15,7 +15,9 @@ object Transaction {
 
 
   def buy(email : String, from: String, price: Double, number: Int) = {
+    
     val money : Double = price * number
+    println(money + " " + price + " " + number)
 
     val user = UserModel.findByEmail(email) match {
       case None => throw new TransactionNotConnected

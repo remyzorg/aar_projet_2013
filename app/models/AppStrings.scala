@@ -3,7 +3,7 @@ package models
 object AppStrings {
 
 val errNotEnoughMoney = "Not enough money"
-val errNotEnoughQuote = "Not of that quote"
+val errNotEnoughQuote = "You don't own quotes of this company"
 
 
 }
