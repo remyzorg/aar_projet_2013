@@ -35,8 +35,8 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 GET    /users/deleteall         controllers.Signup.delete
 GET    /users/printall          controllers.Signup.print
 
-GET    /quote/add/:from/:value      controllers.EditAccount.opQuote(from:String,value:Int, op : Boolean=true)
-GET    /quote/sub/:from/:value      controllers.EditAccount.opQuote(from:String,value:Int, op : Boolean=false)
+GET    /quote/add/:from/:value      controllers.Operation.opQuote(from:String,value:Int, op : Boolean=true)
+GET    /quote/sub/:from/:value      controllers.Operation.opQuote(from:String,value:Int, op : Boolean=false)
 
-GET    /capital/add/:value      controllers.EditAccount.opCapital(value:Double, op : Boolean=true)
-GET    /capital/sub/:value      controllers.EditAccount.opCapital(value:Double, op : Boolean=false)
+GET    /capital/add/:value      controllers.Operation.opCapital(value:Double, op : Boolean=true)
+GET    /capital/sub/:value      controllers.Operation.opCapital(value:Double, op : Boolean=false)

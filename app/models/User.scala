@@ -35,9 +35,7 @@ object UserModel {
       },
       obj.getAs[DBObject](quotes) match {
         case Some (m : DBObject) => { val m2 : MongoDBObject = m;
-          m2.toMap[String, AnyRef] match {
-            case x: Map[String,Int] => x
-            case _ => Map.empty[String, Int]}
+          m2.toMap[String, AnyRef].asInstanceOf[Map[String, Int]]
         }
         case None => Map.empty[String, Int]
       }

@@ -29,6 +29,10 @@ object Auth extends Controller {
     Ok(views.html.login(form))
   }
 
+
+  def getUser (implicit request : RequestHeader) =
+    request.session.get(Security.username)
+
   def login = Action { implicit request =>
     form.bindFromRequest.fold (
       errors => BadRequest(views.html.login(errors)),

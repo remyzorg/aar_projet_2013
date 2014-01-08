@@ -10,13 +10,14 @@ object Transaction {
   val START_CAPITAL = 10000.0
 
 
-  def buy(from: String, price: Double, number: Int) = {
+
+  def buy(email : String, from: String, price: Double, number: Int) = {
     // What to do when buying
     // Bdd updates, verifications, etc
     true
   }
 
-  def sell(from: String, price: Double, number: Int) = {
+  def sell(email : String, from: String, price: Double, number: Int) = {
     // What to do when selling
     // Bdd updates, verifications, etc
     true
