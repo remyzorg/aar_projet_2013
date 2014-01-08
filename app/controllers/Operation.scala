@@ -19,8 +19,11 @@ object Operation extends Controller with Secured {
       // The price.as[Double] doesn't work, for now it is the only solution
       Auth.getUser match {
         case Some (mail) =>
-          val res = Transaction.buy(mail, from, price.as[String].toDouble,
-            number)
+          try {Transaction.buy(mail, from, price.as[String].toDouble, number)}
+          catch {
+            case e: TransactionException => BadRequest(e.getMessage)
+            case e: TransactionNotConnected => onUnauthorized(request)
+          }
           Ok(views.html.buy(from, number, price.as[String]))
         case None => onUnauthorized(request)
       }
@@ -37,8 +40,11 @@ object Operation extends Controller with Secured {
       
       Auth.getUser match {
         case Some (mail) =>
-          val res = Transaction.sell(mail, from, price.as[String].toDouble,
-            number)
+          try{Transaction.sell(mail, from, price.as[String].toDouble, number)}
+          catch {
+            case e: TransactionException => BadRequest(e.getMessage)
+            case e: TransactionNotConnected => onUnauthorized(request)
+          }
           Ok(views.html.sell(from, number, price.as[String]))
         case None => onUnauthorized(request)
       }
