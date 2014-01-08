@@ -6,6 +6,8 @@ import play.api.libs.ws._
 import play.api.libs.json._
 import play.api.data.validation.ValidationError
 
+import com.fasterxml.jackson.core.JsonParseException
+
 abstract class Finance {
 
   val api = "http://query.yahooapis.com/v1/public/yql"
@@ -20,8 +22,15 @@ abstract class Finance {
   }
   
   def parseBodyResponse(response: Response) = {
-    val res = response.json \ "query" \ "results"
+
+
+    val res = try {response.json \ "query" \ "results"}
+    catch {
+      case e: JsonParseException => {println(e + "\n" + response); throw e}
+    }
+
     res // Json.prettyPrint(res)
+
   }
 
   // def requestQuote(name: String) = {

@@ -2,6 +2,7 @@ package models
 
 import org.bson.types.ObjectId
 import com.mongodb.casbah.Imports._
+import scala.language.reflectiveCalls
 
 
 

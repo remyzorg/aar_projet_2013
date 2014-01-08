@@ -5,6 +5,7 @@ import play.api.mvc._
 
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json.Json
+import play.api.libs.json.JsResultException
 import models._
 
 
@@ -15,13 +16,21 @@ object Operation extends Controller with Secured {
 
     resp.map { response =>
       val result = Quote.parseResponse(response)
-      val price = Quote.getBidPrice(result)
+      val price = Quote.getAskPrice(result)
       // The price.as[Double] doesn't work, for now it is the only solution
       Auth.getUser match {
         case Some (mail) =>
-          val res = Transaction.buy(mail, from, price.as[String].toDouble,
-            number)
-          Ok(views.html.buy(from, number, price.as[String]))
+          try {
+            Transaction.buy(mail, from, price.as[String].toDouble, number)
+            Ok(views.html.buy(from, number, price.as[String]))
+          }
+          catch {
+            case e: TransactionException =>
+              Ok(e.getMessage)
+            case e: TransactionNotConnected => onUnauthorized(request)
+            case e: JsResultException =>
+              BadRequest(views.html.error(e.getMessage))
+          }
         case None => onUnauthorized(request)
       }
     }
@@ -32,14 +41,20 @@ object Operation extends Controller with Secured {
 
     resp.map { response =>
       val result = Quote.parseResponse(response)
-      val price = Quote.getAskPrice(result)
+      val price = Quote.getBidPrice(result)
       // The price.as[Double] doesn't work, for now it is the only solution
       
       Auth.getUser match {
         case Some (mail) =>
-          val res = Transaction.sell(mail, from, price.as[String].toDouble,
-            number)
-          Ok(views.html.sell(from, number, price.as[String]))
+          try{
+            Transaction.sell(mail, from, price.as[String].toDouble, number)
+            Ok(views.html.sell(from, number, price.as[String]))
+          }
+          catch {
+            case e: TransactionException =>
+              Ok(e.getMessage)
+            case e: TransactionNotConnected => onUnauthorized(request)
+          }
         case None => onUnauthorized(request)
       }
     }
