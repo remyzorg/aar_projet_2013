@@ -12,7 +12,8 @@ object Transaction {
 
   val START_CAPITAL = 10000.0
   val LIMIT = -1000.0
-
+  val SELL_ACTION = "sell"
+  val BUY_ACTION = "buy"
 
   def buy(email : String, from: String, price: Double, number: Int) = {
     
@@ -28,7 +29,7 @@ object Transaction {
 
     UserModel.opCapital(email, money, (_-_))
     UserModel.opQuoteByCompany(email, from, number, (_+_))
-    UserModel.opTransaction(email, TransactionObject("Buy", from, price, number, 0.0))
+    UserModel.opTransaction(email, BUY_ACTION, from, price, number)
   }
 
 
@@ -49,7 +50,7 @@ object Transaction {
 
     UserModel.opCapital(email, money, (_+_))
     UserModel.opQuoteByCompany(email, from, number, (_-_))
-    UserModel.opTransaction(email, TransactionObject("Sell", from, price, number, 0.0))
+    UserModel.opTransaction(email, SELL_ACTION, from, price, number)
   }
 
 }
