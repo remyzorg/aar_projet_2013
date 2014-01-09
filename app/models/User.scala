@@ -221,7 +221,7 @@ object UserModel {
 
 
   def printAll = for (x <- Database.user.find ()) println (x)
-  def stringAll = Database.user.find().mkString(" ")
+  def stringAll = "[" + Database.user.find().mkString(",") + "]"
   def deleteAll = Database.user.remove(MongoDBObject())
 
 
