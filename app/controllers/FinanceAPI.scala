@@ -62,8 +62,11 @@ object FinanceAPI extends Controller {
   }
 
   def quote(name: String) = Action.async { implicit request =>
-    rawQuote(name).map { case Some(quoteInfo) =>
-      Ok(views.html.quote(quoteInfo, Nil))
+    rawQuote(name).map {
+      case Some(quoteInfo) => Ok(views.html.quote(quoteInfo, Nil))
+      case None => 
+        BadRequest(
+          views.html.error("The Quote requested doesn't exist or have value"))
     }.recover {
       case e : JsResultException => 
         BadRequest(

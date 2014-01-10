@@ -29,19 +29,20 @@ GET     /quote/:name                controllers.FinanceAPI.quoteWithHistory(name
 GET     /history/:name              controllers.FinanceAPI.history(name)
 
 # Buying, selling stocks and currency operations
-GET     /quote/buy/:from        controllers.Operation.buyStock(from, number: Int ?= 1)
-GET     /quote/sell/:from       controllers.Operation.sellStock(from, number: Int ?= 1)
+GET     /quote/buy/:from            controllers.Operation.opStock(action:String="buy",from, number: Int ?= 1)
+
+GET     /quote/sell/:from       controllers.Operation.opStock(action:String="sell",from, number: Int ?= 1)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 
 # Dev part
-GET    /users/deleteall         controllers.Signup.delete
-GET    /users/printall          controllers.Signup.print
+GET    /users/deleteall         controllers.Debug.delete
+GET    /users/printall          controllers.Debug.print
 
-GET    /quote/add/:from/:value      controllers.Operation.opQuote(from:String,value:Int, op : Boolean=true)
-GET    /quote/sub/:from/:value      controllers.Operation.opQuote(from:String,value:Int, op : Boolean=false)
+GET    /quote/add/:from/:value      controllers.Debug.opQuote(from:String,value:Int, op : Boolean=true)
+GET    /quote/sub/:from/:value      controllers.Debug.opQuote(from:String,value:Int, op : Boolean=false)
 
-GET    /capital/add/:value      controllers.Operation.opCapital(value:Double, op : Boolean=true)
-GET    /capital/sub/:value      controllers.Operation.opCapital(value:Double, op : Boolean=false)
+GET    /capital/add/:value      controllers.Debug.opCapital(value:Double, op : Boolean=true)
+GET    /capital/sub/:value      controllers.Debug.opCapital(value:Double, op : Boolean=false)
