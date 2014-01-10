@@ -12,7 +12,8 @@ import models._
 object Operation extends Controller with Secured {
 
   def buyStock(from: String, number: Int) = Action.async { implicit request =>
-    val resp = Quote.request(from)
+    val fromUpper = from.toUpperCase
+    val resp = Quote.request(fromUpper)
 
     resp.map { response =>
       val result = Quote.parseResponse(response)
@@ -21,8 +22,8 @@ object Operation extends Controller with Secured {
       Auth.getUser match {
         case Some (mail) =>
           try {
-            Transaction.buy(mail, from, price.as[String].toDouble, number)
-            Ok(views.html.buy(from, number, price.as[String]))
+            Transaction.buy(mail, fromUpper, price.as[String].toDouble, number)
+            Ok(views.html.buy(fromUpper, number, price.as[String]))
           }
           catch {
             case e: TransactionException =>
@@ -37,7 +38,8 @@ object Operation extends Controller with Secured {
   }
 
   def sellStock(from: String, number: Int) = Action.async { implicit request =>
-    val resp = Quote.request(from)
+    val fromUpper = from.toUpperCase
+    val resp = Quote.request(fromUpper)
 
     resp.map { response =>
       val result = Quote.parseResponse(response)
@@ -47,8 +49,8 @@ object Operation extends Controller with Secured {
       Auth.getUser match {
         case Some (mail) =>
           try{
-            Transaction.sell(mail, from, price.as[String].toDouble, number)
-            Ok(views.html.sell(from, number, price.as[String]))
+            Transaction.sell(mail, fromUpper, price.as[String].toDouble, number)
+            Ok(views.html.sell(fromUpper, number, price.as[String]))
           }
           catch {
             case e: TransactionException =>
@@ -60,6 +62,7 @@ object Operation extends Controller with Secured {
     }
   }
 
+  // Thoses two following Actions are only for a debugging purpose
 
   def opCapital (value : Double, op : Boolean) = Action { implicit request =>
     Auth.getUser match {
