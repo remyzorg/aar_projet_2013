@@ -8,6 +8,20 @@ import play.api.data.validation.ValidationError
 
 import com.fasterxml.jackson.core.JsonParseException
 
+case class QuoteInfo (
+  name : String,
+  ask : Double,
+  bid : Double,
+  askRealtime : Double,
+  bidRealtime : Double,
+  changePercentage : String,
+  change: Double,
+  dayLow : Double,
+  dayHigh : Double,
+  volume : Int
+)
+
+
 abstract class Finance {
 
   val api = "http://query.yahooapis.com/v1/public/yql"

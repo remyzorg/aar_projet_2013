@@ -13,20 +13,52 @@
 	<form method="post" autocomplete="on">
 
 		
-    New e-mail: <input type="email" name="newemail" placeholder="@email"><br> 
-    New password: <input type="password" name="newpassword"
-												 placeholder="******">
-		<br>
-    New user name: <input type="text" name="newusername"
-    placeholder="@username">
-		<br>
+		<div class="form-group">
+			<label for="InputEmail">Change email address</label>
+			<input type="email" name="newemail" class="form-control" id="ChangeEmail"  placeholder="@email">
+		</div>
+
+		<div class="form-group">
+			<label for="InputUsername">Change user name</label>
+			<input type="text" name="newusername" class="form-control" id="ChangeUsername" placeholder="@username">
+		</div>
+		
+		<div class="form-group">
+			<label for="InputPassword">Change password</label>
+			<input type="password" name="newpassword" class="form-control" id="ChangePassword" placeholder="******">
+		</div>
+													
 		<br>
 
-		<p>You must enter your current password in order to update your credentials</p>
-    Password:<input type="password" name="password"><br>
 		
-		<input type="submit">
+
+
+		<a href="#saveChanges" role="button" class="btn"
+			 data-toggle="modal">Save changes</a>
+		
+		<div id="saveChanges" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h3 id="myModalLabel">Save changes</h3>
+			</div>
+			<div class="modal-body">
+				<p>Enter your current password to update your credentials</p>
+				<div class="form-group">
+					<label for="InputPassword">Password</label>
+					<input type="password" name="password" class="form-control" id="InputPassword">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+				<input type="submit" class="btn btn-default" value="Save changes"/>
+			</div>
+		</div>
+		
   </form>
 
+	<!-- Button to trigger modal -->
+	
+	<!-- Modal -->
+	
 </div>
 }

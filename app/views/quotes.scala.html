@@ -1,11 +1,11 @@
-@(values: List[(String, Double, Double)])(implicit request : Request[Any])
+@(values: List[QuoteInfo])(implicit request : Request[Any])
 
 @main("Yolo - Multiple quotes") {
 <div class="container">
   <p>The actual quote values that are available are:
   <ul>
-    @for((company, ask, bid) <- values) { 
-      <li><a href="/quote/@company">@company</a>: Buy for @ask, Selling for @bid</li> 
+    @for(quoteInfo <- values) {
+      <li><a href="/quote/@quoteInfo.name">@quoteInfo.name</a>: Buy for @quoteInfo.ask, Selling for @quoteInfo.bid</li>
       }
   </ul>
   </p>

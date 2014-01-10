@@ -17,13 +17,14 @@ object Operation extends Controller with Secured {
 
     resp.map { response =>
       val result = Quote.parseResponse(response)
-      val price = Quote.getAskPrice(result)
+      val quoteInfo = Quote.getQuoteInfo(result)
+      val price = quoteInfo.askRealtime
       // The price.as[Double] doesn't work, for now it is the only solution
       Auth.getUser match {
         case Some (mail) =>
           try {
-            Transaction.buy(mail, fromUpper, price.as[String].toDouble, number)
-            Ok(views.html.buy(fromUpper, number, price.as[String]))
+            Transaction.buy(mail, from, price, number)
+            Ok(views.html.buy(from, number, price.toString))
           }
           catch {
             case e: TransactionException =>
@@ -43,14 +44,14 @@ object Operation extends Controller with Secured {
 
     resp.map { response =>
       val result = Quote.parseResponse(response)
-      val price = Quote.getBidPrice(result)
-      // The price.as[Double] doesn't work, for now it is the only solution
+      val quoteInfo = Quote.getQuoteInfo(result)
+      val price = quoteInfo.askRealtime
       
       Auth.getUser match {
         case Some (mail) =>
           try{
-            Transaction.sell(mail, fromUpper, price.as[String].toDouble, number)
-            Ok(views.html.sell(fromUpper, number, price.as[String]))
+            Transaction.sell(mail, from, price, number)
+            Ok(views.html.sell(from, number, price.toString))
           }
           catch {
             case e: TransactionException =>
