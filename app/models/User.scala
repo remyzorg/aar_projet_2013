@@ -141,6 +141,14 @@ object UserModel {
     }
   }
 
+  def findByUsername(targetUsername : String) = {
+    val obj = Database.user.findOne(MongoDBObject(username -> targetUsername))
+
+    obj match {
+      case Some(obj) => Some(toUser(obj))
+      case None => None
+    }
+  }
 
   def updateByEmail(targetEmail : String, newEmail : Option[String],
     newPassword : Option[String], newUsername : Option[String]) = {
