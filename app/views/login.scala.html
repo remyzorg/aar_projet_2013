@@ -10,14 +10,23 @@
 	}
 
 	<form method="post" autocomplete="on">
-    E-mail: <input type="email" name="email"><br>
-    Password:<input type="password" name="password"><br>
-    <input type="submit">
-  </form>
 
-	<p>You don't already have an account ?
-		Then <a href="@routes.Signup.setup">
-			sign up</a>
+		<div class="form-group">
+			<label for="InputEmail1">Email address</label>
+			<input type="email" name="email" class="form-control" id="InputEmail1" placeholder="Enter email">
+		</div>
+
+		<div class="form-group">
+			<label for="InputPassword1">Password</label>
+			<input type="password" name="password" class="form-control" id="InputPassword1" placeholder="Password">
+		</div>
+
+		<input type="submit" class="btn btn-default" />
+
+		
+  </form>
+	<p class="help-block">You have no account ?
+		Then <a href="@routes.Signup.setup"> sign up</p>
 
 </div>
 }

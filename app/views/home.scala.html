@@ -2,10 +2,34 @@
 
 
 @main("Yolo - Home") {
-    <div id="main-yolo" class="container">
-			
-			Home
+<div id="main-yolo" class="container">
+	
 
-			
-    </div>
+
+
+				@request.session.get(Security.username) match {
+				case Some (u) =>{
+
+				Hi @u !
+				
+				}
+				case None => {
+				<div class="hero-unit">
+					<div class="container">
+						<h1>Welcome on Yolo !</h1>
+						<p>
+							Because we only live once.
+							The app which makes you play with your life.
+						</p>
+						<p><a href="@routes.Signup.setup"
+									class="btn btn-primary btn-large">
+								Sign up &raquo;</a></p>
+
+					</div>
+				</div>
+				}
+				}
+	
+	
+</div>
 }

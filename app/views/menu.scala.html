@@ -11,11 +11,15 @@
       </button>
       <a class="brand" href="@routes.Application.index">Yolo</a>
       <div class="nav-collapse collapse">
-        <ul class="nav">
-          <li><a href="@routes.FinanceAPI.multipleQuotes">Quote</a></li>
 
-					@request.session.get(Security.username) match {
-					case Some (u) =>{ <li class="dropdown">
+				@request.session.get(Security.username) match {
+				case Some (u) =>{
+        <ul class="nav navbar-nav">
+          <li><a href="@routes.FinanceAPI.multipleQuotes">Quote</a></li>
+				</ul>
+
+				<ul class="nav navbar-nav pull-right">
+					<li class="dropdown">
 						<a href="#" class="dropdown-toggle"
 							 data-toggle="dropdown">
 							@u <b class="caret"></b></a>
@@ -24,17 +28,20 @@
 							<li><a href="@routes.Auth.logout">Logout</a></li>
 						</ul>
 					</li>
-					}
-					case None => {
-					<li><button href="/signin" type="button"
-											onclick="self.location.href='@routes.Auth.setup'"
-											class="btn btn-default navbar-btn">Sign in
-					</button></li>
-					}
-					}
-
         </ul>
+				}
+				case None => {
 
+				<ul class="nav navbar-nav pull-right">
+					<button href="/signin" type="button"
+									onclick="self.location.href='@routes.Auth.setup'"
+									class="btn btn-default navbar-btn">Sign in
+					</button>
+				</ul>
+				}
+				}
+
+				
       </div><!--/.nav-collapse -->
 
     </div>
