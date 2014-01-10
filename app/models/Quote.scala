@@ -18,6 +18,7 @@ object Quote extends Finance {
 
   def parseResponse(response: Response) = {
     val res = parseBodyResponse(response) \ "quote"
+    println(Json.prettyPrint(res))
     res // Json.prettyPrint(res)
   }
 

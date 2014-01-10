@@ -12,7 +12,8 @@ case class User (
   username : String,
   capital : Double,
   quotes : Map[String, Int],
-  transactions : List[TransactionObject]
+  transactions : List[TransactionObject],
+  score : Int
 )
 
 case class TransactionObject (
@@ -35,6 +36,7 @@ object UserModel {
   val capital = "capital"
   val quotes = "quotes"
   val transactions = "transactions"
+  val score = "score"
   
   val action = "action"
   val quote = "quote"
@@ -87,7 +89,8 @@ object UserModel {
             .map { obj => toTransaction(obj) }
         }
         case None => Nil
-      }
+      },
+      obj.getAs[Int](score).get
     )
 
   def create (user : User, newPassword : String) = {
@@ -100,7 +103,8 @@ object UserModel {
         password -> cryptedPassword,
         capital -> user.capital,
         quotes -> user.quotes.asDBObject,
-        transactions -> createTransactionList(user.transactions)
+        transactions -> createTransactionList(user.transactions),
+        score -> user.score
       )
     Database.user.save(obj)
   }
@@ -239,6 +243,21 @@ object UserModel {
     }
   }
 
+  def opScore(targetEmail: String, newScore: Int) = {
+    val target = MongoDBObject(email -> targetEmail)
+    val obj = Database.user.findOne(target)
+
+    obj match {
+      case Some(obj) =>
+        Database.user.update(target,
+          $set(score -> newScore))
+      case None => ()
+    }
+  }
+
+  def getLastTransactionFrom(user: User, from: String, action: String) =
+      user.transactions.reverse.find((tr: TransactionObject) => tr.quote == from &&
+        tr.action == action)
 
   def printAll = for (x <- Database.user.find ()) println (x)
   def stringAll = "[" + Database.user.find().mkString(",") + "]"

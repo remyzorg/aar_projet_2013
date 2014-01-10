@@ -51,6 +51,8 @@ object Transaction {
     UserModel.opCapital(email, money, (_+_))
     UserModel.opQuoteByCompany(email, from, number, (_-_))
     UserModel.opTransaction(email, SELL_ACTION, from, price, number)
+
+    Scoring.updateScore(user, from, price)
   }
 
 }

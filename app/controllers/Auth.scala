@@ -7,7 +7,8 @@ import play.api.data._
 import play.api.data.Forms._
 import org.bson.types.ObjectId
 import models._
-
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 
 object Auth extends Controller {
@@ -30,9 +31,6 @@ object Auth extends Controller {
   }
 
 
-  def getUser (implicit request : RequestHeader) =
-    request.session.get(Security.username)
-
   def login = Action { implicit request =>
     form.bindFromRequest.fold (
       errors => BadRequest(views.html.login(errors)),
@@ -54,17 +52,46 @@ object Auth extends Controller {
 
 }
 
+
+
+trait SecuredAsync {
+
+  def username(request: RequestHeader) = request.session.get(Security.username)
+
+  def onUnauthorized(request: RequestHeader) = Results.Redirect(routes.Auth.setup)
+
+  def withAuth(f: => String => Request[AnyContent]
+    => Future[SimpleResult]) = {
+
+    Security.Authenticated(username, onUnauthorized) { user =>
+      Action.async(request => f(user)(request))
+    }
+  }
+
+def withUser(f: User => Request[AnyContent] => Future[SimpleResult]) =
+    withAuth { username => implicit request =>
+    UserModel.findByEmail(username) match {
+      case Some(user) => f(user)(request)
+      case None => Future(onUnauthorized(request))
+    }
+  }
+
+}
+
+
 trait Secured {
 
   def username(request: RequestHeader) = request.session.get(Security.username)
 
   def onUnauthorized(request: RequestHeader) = Results.Redirect(routes.Auth.setup)
 
+
   def withAuth(f: => String => Request[AnyContent] => Result) = {
     Security.Authenticated(username, onUnauthorized) { user =>
       Action(request => f(user)(request))
     }
   }
+
 
   def withUser(f: User => Request[AnyContent] => Result) =
     withAuth { username => implicit request =>
@@ -73,4 +100,5 @@ trait Secured {
       case None => onUnauthorized(request)
     }
   }
-}
+
+  }

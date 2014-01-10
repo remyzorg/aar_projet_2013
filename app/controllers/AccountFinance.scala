@@ -15,7 +15,7 @@ object AccountFinance extends Controller with Secured {
 
   def setup = withUser { user => implicit request =>
 
-    Ok(views.html.account_finance(user.capital, user.quotes))
+    Ok(views.html.account_finance(user))
 
   }
 

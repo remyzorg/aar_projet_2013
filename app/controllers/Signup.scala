@@ -45,22 +45,12 @@ object Signup extends Controller {
     Ok(views.html.signup(form))
   }
 
-  def print = Action {
-    UserModel.printAll;
-    Ok("" + UserModel.stringAll)
-  }
-  
-  def delete = Action { implicit request =>
-    UserModel.deleteAll
-    Ok(views.html.home())
-  }
-
   def submit = Action { implicit request =>
     form.bindFromRequest.fold (
       errors => BadRequest(views.html.signup(errors)),
       user => user match { case (email, username, password, confirm) =>
         UserModel.create (User (new ObjectId(),
-          email, username, Transaction.START_CAPITAL, Map(), Nil), password);
+          email, username, Transaction.START_CAPITAL, Map(), Nil, 0), password);
         Redirect(routes.Application.index)
           .withSession(Security.username -> email)
       }

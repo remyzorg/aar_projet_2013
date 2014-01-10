@@ -23,6 +23,7 @@ object FinanceAPI extends Controller {
     val resp = models.Quote.request(quotes)
     resp.map {
       response =>
+      println(response.json)
       val result = models.Quote.parseResponse(response)
       val values = models.Quote.getMultipleValues(result)
       values
@@ -52,7 +53,9 @@ object FinanceAPI extends Controller {
   def rawQuote(name: String) : Future[Option[QuoteInfo]] = {
     val resp = models.Quote.request(name)
     resp.map { response =>
+      println("Hey hey hey !\n")
       val result = models.Quote.parseResponse(response)
+      println("Hey !\n" + result)
       println("querying " + name)
       println("result : " + result)
       Some(models.Quote.getQuoteInfo(result))
@@ -60,8 +63,11 @@ object FinanceAPI extends Controller {
   }
 
   def quote(name: String) = Action.async { implicit request =>
-    rawQuote(name).map { case Some(quoteInfo) =>
-      Ok(views.html.quote(quoteInfo, Nil))
+    rawQuote(name).map {
+      case Some(quoteInfo) => Ok(views.html.quote(quoteInfo, Nil))
+      case None => 
+        BadRequest(
+          views.html.error("The Quote requested doesn't exist or have value"))
     }.recover {
       case e : JsResultException => 
         BadRequest(
