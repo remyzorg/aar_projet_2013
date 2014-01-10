@@ -21,28 +21,32 @@ object Quote extends Finance {
     res // Json.prettyPrint(res)
   }
 
-  def getMultipleValues(json: JsValue) : List[(String, Double, Double)] = {
+  def getMultipleValues(json: JsValue) : List[QuoteInfo] = {
     val sequence = json.as[JsArray].value
-    def fun(acc: List[(String, Double, Double)], json: JsValue) = {
+    def fun(acc: List[QuoteInfo], json: JsValue) = {
       try {
-        val ask = getAskPrice(json)
-        val bid = getBidPrice(json)
-        if (ask.isInstanceOf[JsValue]) {
-          ((json \ "symbol").as[String], // 0.0, 0.0)
-            ask.as[String].toDouble,
-            bid.as[String].toDouble) :: acc
-        } else { acc }
+        getQuoteInfo(json) :: acc
       } catch {
         case e: JsResultException => acc
       }
     }
-    
-    val res = sequence.foldLeft(List.empty[(String, Double, Double)])(fun)
+
+    val res = sequence.foldLeft(List.empty[QuoteInfo])(fun)
     res
   }
 
-  def getAskPrice(value: JsValue) = value \ "Ask" 
+  def getValue(value : JsValue, name : String) : JsValue = value \ name
 
-  def getBidPrice(value: JsValue) = value \ "Bid"
-
+  def getQuoteInfo(value : JsValue) : QuoteInfo = QuoteInfo (
+    getValue(value, "symbol").as[String],
+    getValue(value, "Ask").as[String].toDouble,
+    getValue(value, "Bid").as[String].toDouble,
+    getValue(value, "AskRealtime").as[String].toDouble,
+    getValue(value, "BidRealtime").as[String].toDouble,
+    getValue(value, "Change_PercentChange").as[String],
+    getValue(value, "ChangeRealtime").as[String].toDouble,
+    getValue(value, "DaysLow").as[String].toDouble,
+    getValue(value, "DaysHigh").as[String].toDouble,
+    getValue(value, "Volume").as[String].toInt
+  )
 }

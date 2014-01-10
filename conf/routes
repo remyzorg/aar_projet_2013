@@ -4,6 +4,7 @@
 
 # Home page
 GET     /                           controllers.Application.index
+GET     /user_home                  controllers.Application.user_home
 
 # Sign in/up and edit profil pages
 
