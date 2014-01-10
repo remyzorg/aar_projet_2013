@@ -8,6 +8,7 @@ val errEmailAlreadyInUse = "Email address already in use"
 val errUsernameAlreadyInUse = "User name already in use"
 val errWrongPassword = "Wrong password"
 val errNotMatchingPasswords = "Passwords must match"
+val errEmptyFields = "Fields are empty"
 
 
 }

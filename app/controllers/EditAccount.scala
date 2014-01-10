@@ -26,6 +26,11 @@ object EditAccount extends Controller with Secured {
         "newpassword" -> optional(text),
         "newusername" -> optional(text)
       ) (EditAccountData.apply)(EditAccountData.unapply)
+        verifying (AppStrings.errEmptyFields, result =>
+          result match {
+            case (EditAccountData(_, None, None, None)) => false
+            case _ => true
+          })
         verifying (AppStrings.errWrongPassword, result =>
           result match
           {case (EditAccountData(password, _, _, _)) =>
