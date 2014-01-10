@@ -1,0 +1,52 @@
+@(user : User, quotes_with_prices : Iterable[(String, Int, Option[QuoteInfo])])(implicit request : Request[Any])
+
+
+@main("Yolo - Home") {
+    <div id="main-yolo" class="container">
+        Home
+    </div>
+    <div>
+        <h2>Capital : <span class="capital">@{"%1.0f" format user.capital}</span> </h2>
+    </div>
+    <div>
+        <div>
+            <h2>Mes Actions : </h2>
+            <table class="table table-hover">
+                @for((name, number, quoteInfo) <- quotes_with_prices if number > 0) {
+                    <tr>
+                        <td><span class="quote_number">@number</span></td>
+                        <td><span class="quote_name">@name</span></td>
+                        @quoteInfo match {
+                           case Some(quoteInfo) => { <td> @{quoteInfo.bidRealtime * number} (@quoteInfo.bidRealtime unit.)</td>  <td>@quoteInfo.changePercentage</td>    }
+                           case None => { Indispo }
+                        }
+                    </tr>
+                }
+            </table>
+            <span>Total des valeurs disponibles :
+                @defining(quotes_with_prices.foldLeft(0.0){
+                    case (acc, (_, quantity, Some(quoteInfo))) => acc + quantity * quoteInfo.bidRealtime
+                    case (acc, (_, quantity, None)) => acc }
+                ){total =>
+                    <span class="total">@total</span>
+                    (avec capital : <span class="totalcapital">@{total + user.capital}</span>)
+                }
+            </span>
+        </div>
+        <div>
+            <h2>Mes Transactions</h2>
+            <ul>
+                @for(transaction <- user.transactions.reverse) {
+                <li>
+                    @transaction.action match {
+                    case "Buy" => { <span class="buy">Achat</span> }
+                    case "Sell" => { <span class="sell">Vente</span> }
+                    case _ => { @transaction.action }
+                    }
+                    : @transaction.number <a href="quote/@transaction.quote">@transaction.quote</a> pour
+                    @{transaction.number * transaction.price} (prix unit. @transaction.price) ; @transaction.capital </li>
+                }
+        </div>
+    </div>
+
+}
