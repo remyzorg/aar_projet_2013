@@ -53,8 +53,9 @@ object FinanceAPI extends Controller {
   def rawQuote(name: String) : Future[Option[QuoteInfo]] = {
     val resp = models.Quote.request(name)
     resp.map { response =>
-      println(response.json)
+      println("Hey hey hey !\n")
       val result = models.Quote.parseResponse(response)
+      println("Hey !\n" + result)
       println("querying " + name)
       println("result : " + result)
       Some(models.Quote.getQuoteInfo(result))

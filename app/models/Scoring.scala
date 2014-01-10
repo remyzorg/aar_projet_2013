@@ -21,7 +21,12 @@ object Scoring {
     transaction match {
       case Some(tr) =>
         val score = transactionValue(price, tr)
-        UserModel.opScore(user.email, user.score + score)
+        val prevScore = try {
+          user.score
+        } catch {
+          case e => 0
+        }
+        UserModel.opScore(user.email, prevScore + score)
       case None => ()
     }
   }
