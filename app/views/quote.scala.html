@@ -12,27 +12,7 @@
     You can sell one for @quoteInfo.ask <a href="/quote/sell/@quoteInfo.name">here</a>. <br />
     <br />
 
-    <canvas id="historyChart" width="400" height="250"></canvas>
-
-    <script>
-      var ctx = $("#historyChart").get(0).getContext("2d");
-      var dates = [ @for((date, _) <- values) { "@date", } ]
-      var prices = [ @for((_, price) <- values) { @price, } ]
-      
-      var data = {
-      	labels : dates,
-      	datasets : [
-      		{
-      			fillColor : "rgba(220,220,220,0.5)",
-      			strokeColor : "rgba(220,220,220,1)",
-      			pointColor : "rgba(220,220,220,1)",
-      			pointStrokeColor : "#fff",
-      			data : prices
-      		}
-      	]
-      }
-      var myNewChart = new Chart(ctx).Line(data);
-      </script>
+    @chart(values)
       
   </p>
 </div>
