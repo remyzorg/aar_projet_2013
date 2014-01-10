@@ -12,7 +12,8 @@ import models._
 object Operation extends Controller with Secured {
 
   def buyStock(from: String, number: Int) = Action.async { implicit request =>
-    val resp = Quote.request(from)
+    val fromUpper = from.toUpperCase
+    val resp = Quote.request(fromUpper)
 
     resp.map { response =>
       val result = Quote.parseResponse(response)
@@ -38,7 +39,8 @@ object Operation extends Controller with Secured {
   }
 
   def sellStock(from: String, number: Int) = Action.async { implicit request =>
-    val resp = Quote.request(from)
+    val fromUpper = from.toUpperCase
+    val resp = Quote.request(fromUpper)
 
     resp.map { response =>
       val result = Quote.parseResponse(response)
@@ -61,6 +63,7 @@ object Operation extends Controller with Secured {
     }
   }
 
+  // Thoses two following Actions are only for a debugging purpose
 
   def opCapital (value : Double, op : Boolean) = Action { implicit request =>
     Auth.getUser match {

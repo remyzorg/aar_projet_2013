@@ -141,6 +141,14 @@ object UserModel {
     }
   }
 
+  def findByUsername(targetUsername : String) = {
+    val obj = Database.user.findOne(MongoDBObject(username -> targetUsername))
+
+    obj match {
+      case Some(obj) => Some(toUser(obj))
+      case None => None
+    }
+  }
 
   def updateByEmail(targetEmail : String, newEmail : Option[String],
     newPassword : Option[String], newUsername : Option[String]) = {
@@ -207,9 +215,21 @@ object UserModel {
   }
 
 
-  def opTransaction(targetEmail: String, transaction: TransactionObject) = {
+  def opTransaction(targetEmail: String, 
+    action: String,
+    from: String,
+    price: Double,
+    number: Int) = {
+
     val target = MongoDBObject(email -> targetEmail)
     val obj = Database.user.findOne(target)
+
+    val capitalVal = obj match {
+      case Some(obj) => obj.getAs[Double](capital).get
+      case None => 0.0
+    }
+
+    val transaction = TransactionObject(action, from, price, number, capitalVal)
 
     obj match {
       case Some(obj) =>
@@ -221,7 +241,7 @@ object UserModel {
 
 
   def printAll = for (x <- Database.user.find ()) println (x)
-  def stringAll = Database.user.find().mkString(" ")
+  def stringAll = "[" + Database.user.find().mkString(",") + "]"
   def deleteAll = Database.user.remove(MongoDBObject())
 
 

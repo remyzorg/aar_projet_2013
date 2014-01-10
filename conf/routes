@@ -17,6 +17,10 @@ GET     /logout                     controllers.Auth.logout
 
 GET     /account/edit               controllers.EditAccount.setup
 POST    /account/edit               controllers.EditAccount.edit
+GET     /account/finance            controllers.AccountFinance.setup
+
+
+
 
 # API to call the Yahoo finance API
 GET     /quotes                     controllers.FinanceAPI.multipleQuotes

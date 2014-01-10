@@ -18,16 +18,27 @@ object Signup extends Controller {
       "username" -> nonEmptyText,
       "password" -> nonEmptyText,
       "confirm" -> nonEmptyText
-    ) verifying ("Passwords must match", result =>
-      result match
-      {case (_, _, password, confirm) => password == confirm;}
-    ) verifying ("This e-mail is already in use", result =>
-      result match {
-        case (email, _, _, _) =>
-          UserModel.findByEmail(email) match {
+    )
+      verifying (AppStrings.errEmailAlreadyInUse, result =>
+        result match {
+          case (email, _, _, _) =>
+            UserModel.findByEmail(email) match {
+              case None => true
+              case _ => false
+            }})
+      verifying (AppStrings.errUsernameAlreadyInUse, result =>
+        result match
+        {case (_, username, _, _) =>
+          UserModel.findByUsername(username) match {
             case None => true
-            case _ => false
-          }})
+            case Some (_) => false
+          }
+        })
+      verifying (AppStrings.errNotMatchingPasswords, result =>
+        result match
+        {case (_, _, password, confirm) => password == confirm;
+        })
+
   )
 
   def setup = Action { implicit request =>
