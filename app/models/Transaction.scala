@@ -27,6 +27,8 @@ object Transaction {
     if (user.capital < 0 || (user.capital - money) < LIMIT)
       throw new TransactionException (AppStrings.errNotEnoughMoney)
 
+    println(UserModel.getLastTransactionFrom(user, from, SELL_ACTION))
+
     UserModel.opCapital(email, money, (_-_))
     UserModel.opQuoteByCompany(email, from, number, (_+_))
     UserModel.opTransaction(email, BUY_ACTION, from, price, number)

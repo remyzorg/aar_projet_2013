@@ -231,6 +231,9 @@ object UserModel {
     }
   }
 
+  def getLastTransactionFrom(user: User, from: String, action: String) =
+      user.transactions.reverse.find((tr: TransactionObject) => tr.quote == from &&
+        tr.action == action)
 
   def printAll = for (x <- Database.user.find ()) println (x)
   def stringAll = "[" + Database.user.find().mkString(",") + "]"
