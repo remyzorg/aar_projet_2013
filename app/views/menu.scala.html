@@ -32,16 +32,19 @@
 				}
 				case None => {
 
-				<ul class="nav navbar-nav pull-right">
-					<button href="/signin" type="button"
-									onclick="self.location.href='@routes.Auth.setup'"
-									class="btn btn-default navbar-btn">Sign in
-					</button>
-				</ul>
+				@helper.form(action = routes.Auth.login,
+				             'class -> "navbar-form pull-right"  ) {
+				<input class="span2" type="text" placeholder="Email" name="email" />
+				<input class="span2" type="password" placeholder="Password"
+							 name="password" />
+				<input type="submit" class="btn"value="Sign in"/>
+				}
+				
 				}
 				}
 
-				
+
+
       </div><!--/.nav-collapse -->
 
     </div>
