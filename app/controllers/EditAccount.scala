@@ -18,7 +18,7 @@ case class EditAccountData (
 
 object EditAccount extends Controller with Secured {
 
-  def form = {implicit request : Request[Any] =>
+  def form (implicit request : Request[Any]) = {
     Form(
       mapping(
         "password" -> nonEmptyText,
@@ -73,7 +73,7 @@ object EditAccount extends Controller with Secured {
 
 
   def setup = withUser { user => implicit request =>
-    Ok(views.html.edit_account(form(request), user.email, user.username))
+    Ok(views.html.edit_account(form, user.email, user.username))
   }
 
   def edit = withUser { user => implicit request =>

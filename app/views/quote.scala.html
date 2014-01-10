@@ -7,10 +7,16 @@
 
     The actual buying price for @company is @bid. 
 
-    You can buy one by clicking <a href="/quote/buy/@company">here</a>.<br />
+    You can buy one by clicking
+		<a href="@routes.Operation.opStock("buy",company,
+																						1)">here</a>.
+		<br />
 
     You can sell one for @ask <a href="/quote/sell/@company">here</a>. <br />
     <br />
+
+		<a href="@routes.Operation.opStock("sell",company, 1)">here</a>.
+		<br />
 
     <canvas id="historyChart" width="400" height="250"></canvas>
 

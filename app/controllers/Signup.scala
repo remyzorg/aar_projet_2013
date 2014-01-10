@@ -45,16 +45,6 @@ object Signup extends Controller {
     Ok(views.html.signup(form))
   }
 
-  def print = Action {
-    UserModel.printAll;
-    Ok("" + UserModel.stringAll)
-  }
-  
-  def delete = Action { implicit request =>
-    UserModel.deleteAll
-    Ok(views.html.home())
-  }
-
   def submit = Action { implicit request =>
     form.bindFromRequest.fold (
       errors => BadRequest(views.html.signup(errors)),

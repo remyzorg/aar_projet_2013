@@ -1,11 +1,18 @@
-@(capital : Double, quotes : Map[String, Int])(implicit request : Request[Any])
+@(user: User)(implicit request : Request[Any])
 
 @main("Yolo - Account Quotes") {
 <div id="login-yolo" class="container">
 
-capital : @capital
+capital : @user.capital
 <br/>
-quotes : @quotes
+quotes : @user.quotes
+
+<br/>
+history : 
+<br/>
+@for(he <- user.transactions) {
+@he <br/>
+}
 
 </div>
 }
