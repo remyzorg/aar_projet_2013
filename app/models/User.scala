@@ -10,7 +10,9 @@ case class User (
   username : String,
   capital : Double,
   quotes : Map[String, Int],
-  transactions : List[TransactionObject]
+  transactions : List[TransactionObject],
+  score : Int,
+  friends : List[String]
 )
 
 case class TransactionObject (
@@ -21,6 +23,8 @@ case class TransactionObject (
   number : Int,
   capital : Double
 )
+
+class UserNotFound(user: String) extends RuntimeException(user)
 
 object UserModel {
   import com.github.t3hnar.bcrypt._
@@ -33,6 +37,8 @@ object UserModel {
   val capital = "capital"
   val quotes = "quotes"
   val transactions = "transactions"
+  val score = "score"
+  val friends = "friends"
   
   val action = "action"
   val quote = "quote"
@@ -89,8 +95,20 @@ object UserModel {
             .map { obj => toTransaction(obj) }
         }
         case None => Nil
+      },
+      obj.getAs[Int](score) match {
+        case Some (d) => d
+        case None => 0
+      },
+      obj.getAs[MongoDBList](friends) match {
+        case Some (m : MongoDBList) => {
+          m.toList.asInstanceOf[List[String]]// .map 
+          // { obj => obj.getAs[String].get }
+        }
+        case None => Nil
       }
     )
+
 
   def create (user : User, newPassword : String) = {
     val cryptedPassword = newPassword.bcrypt
@@ -102,7 +120,9 @@ object UserModel {
         password -> cryptedPassword,
         capital -> user.capital,
         quotes -> user.quotes.asDBObject,
-        transactions -> createTransactionList(user.transactions)
+        transactions -> createTransactionList(user.transactions),
+        score -> user.score,
+        friends -> user.friends
       )
     Database.user.save(obj)
   }
@@ -174,6 +194,25 @@ object UserModel {
     }
   }
 
+  def addFriend(targetEmail: String, friendUsername: String) = {
+    val target = MongoDBObject(email -> targetEmail)
+    val obj = Database.user.findOne(target)
+
+    //check existence
+    findByUsername(friendUsername) match {
+      case Some(_) => ()
+      case None => throw new UserNotFound(friendUsername)
+    }
+
+    obj match {
+      case Some(obj) =>
+        Database.user.update(target, 
+          $push(friends -> friendUsername))
+      case None => ()
+    }
+
+  }
+
 
   def opCapital(targetEmail: String, value: Double,
     op : (Double, Double) => Double){
@@ -241,10 +280,31 @@ object UserModel {
     }
   }
 
+  def opScore(targetEmail: String, newScore: Int) = {
+    val target = MongoDBObject(email -> targetEmail)
+    val obj = Database.user.findOne(target)
+
+    obj match {
+      case Some(obj) =>
+        Database.user.update(target,
+          $set(score -> newScore))
+      case None => ()
+    }
+  }
+
+  def getLastTransactionFrom(user: User, from: String, action: String) =
+      user.transactions.reverse.find((tr: TransactionObject) => tr.quote == from &&
+        tr.action == action)
 
   def printAll = for (x <- Database.user.find ()) println (x)
   def stringAll = "[" + Database.user.find().mkString(",") + "]"
   def deleteAll = Database.user.remove(MongoDBObject())
-
+  def updateAll = for (x <- Database.user.find ()) {
+    try {
+      x.getAs[Int](score).get
+    } catch {
+      case e => Database.user.update(x, $set(score -> 0))
+    }
+  }
 
 }

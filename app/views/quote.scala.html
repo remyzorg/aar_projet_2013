@@ -8,13 +8,13 @@
     The actual buying price for @quoteInfo.name is @quoteInfo.bid.
 
     You can buy one by clicking
-		<a href="@routes.Operation.opStock("buy",quoteInfo.name,
-																						1)">here</a>.
-		<br />
+    <a href="@routes.Operation.opStock("buy",quoteInfo.name,1)">here</a>.
+    <br />
 
-
-		<a href="@routes.Operation.opStock("sell",quoteInfo.name, 1)">here</a>.
-		<br />
+    You can sell
+    one <a href="@routes.Operation.opStock("sell",quoteInfo.name,1)">here</a> 
+    (if you possess it).
+    <br />
 
     <canvas id="historyChart" width="400" height="250"></canvas>
 

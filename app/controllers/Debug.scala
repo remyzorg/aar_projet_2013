@@ -42,7 +42,9 @@ object Debug extends Controller with Secured{
     Ok(views.html.home())
   }
 
-
-
+  def update = Action { implicit request =>
+    UserModel.updateAll
+    Ok(views.html.home())
+  }
 
 }
