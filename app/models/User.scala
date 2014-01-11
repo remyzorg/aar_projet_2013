@@ -96,7 +96,7 @@ object UserModel {
         }
         case None => Nil
       },
-      obj.getAsOrElse(score, 0)
+      obj.getAsOrElse(score, 0),
       obj.getAs[MongoDBList](friends) match {
         case Some (m : MongoDBList) => {
           m.toList.asInstanceOf[List[String]]// .map 
