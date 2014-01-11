@@ -4,7 +4,7 @@
 <div class="container">
     <h2>@quoteInfo.name - @quoteInfo.bidRealtime
         <!-- Large button group -->
-        @quoteInfo.bidRealtime match {
+        @quoteInfo.askRealtime match {
           case Some(price) => {
         <div class="btn-group">
           <button class="btn btn-default btn-lg dropdown-toggle" type="button" data-toggle="dropdown">
@@ -19,7 +19,7 @@
           }
           case None => { N/A }
         }
-        @quoteInfo.askRealtime match {
+        @quoteInfo.bidRealtime match {
         case Some(price) => {
         <div class="btn-group">
             <button class="btn btn-default btn-lg dropdown-toggle" type="button" data-toggle="dropdown">
