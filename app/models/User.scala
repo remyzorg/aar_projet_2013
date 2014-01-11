@@ -262,6 +262,12 @@ object UserModel {
   def printAll = for (x <- Database.user.find ()) println (x)
   def stringAll = "[" + Database.user.find().mkString(",") + "]"
   def deleteAll = Database.user.remove(MongoDBObject())
-
+  def updateAll = for (x <- Database.user.find ()) {
+    try {
+      x.getAs[Int](score).get
+    } catch {
+      case e => Database.user.update(x, $set(score -> 0))
+    }
+  }
 
 }
