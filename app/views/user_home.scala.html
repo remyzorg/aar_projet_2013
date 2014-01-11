@@ -1,24 +1,38 @@
 @(user : User, quotes_with_prices : Iterable[(String, Int, Option[(QuoteInfo, List[(String, Double)])])])(implicit request : Request[Any])
 
 
-@main("Yolo - Home") {
-    <div id="main-yolo" class="container">
-        Home
+@header_main("Yolo - Home") {
+    <link href="@routes.Assets.at("stylesheets/home.css")"
+        rel="stylesheet" />
+} {
+    <div id="top_panel">
+        <div class="score_panel">
+            <h2>Score : <span class="score">@user.score</span> </h2>
+        </div>
+        <div class="capital_panel">
+            <h2>Capital : <span class="capital">@{"%1.2f" format user.capital}</span> </h2>
+        </div>
     </div>
-    <div>
-        <h2>Capital : <span class="capital">@{"%1.0f" format user.capital}</span> </h2>
-    </div>
-    <div>
+    <div id="left_col">
         <div>
             <h2>Mes Actions : </h2>
             <table class="table table-hover">
+                <tr>
+                    <th>Quant.</th>
+                    <th>Action</th>
+                    <th>Valeur</th>
+                    <th>Changement</th>
+                </tr>
                 @for((name, number, quoteInfo) <- quotes_with_prices if number > 0) {
                     <tr>
                         <td><span class="quote_number">@number</span></td>
-                        <td><span class="quote_name">@name</span></td>
+                        <td><span class="quote_name"><a href="quote/@name">@name</a></span></td>
                         @quoteInfo match {
-                           case Some((quoteInfo, history)) => { <td> @{quoteInfo.bidRealtime * number} (@quoteInfo.bidRealtime unit.)</td>  <td>@quoteInfo.changePercentage</td>    }
-                           case None => { Indispo }
+                           case Some((quoteInfo, history)) => {
+                                <td> @{"%1.2f" format (quoteInfo.bidRealtime * number)} (@{"%1.2f" format quoteInfo.bidRealtime} unit.)</td>
+                                <td>@quoteInfo.changePercentage</td>
+                           }
+                           case None => { <td>Indispo</td> <td>Indispo</td> }
                         }
                     </tr>
                 }
@@ -28,8 +42,8 @@
                     case (acc, (_, quantity, Some((quoteInfo, history)))) => acc + quantity * quoteInfo.bidRealtime
                     case (acc, (_, quantity, None)) => acc }
                 ){total =>
-                    <span class="total">@total</span>
-                    (avec capital : <span class="totalcapital">@{total + user.capital}</span>)
+                    <span class="total">@{"%1.2f" format total}</span>
+                    (avec capital : <span class="totalcapital">@{"%1.2f" format total + user.capital}</span>)
                 }
             </span>
         </div>
@@ -47,8 +61,14 @@
                     @{transaction.number * transaction.price} (prix unit. @transaction.price) ; @transaction.capital </li>
                 }
         </div>
+        <div>
+            <h2>Mes Amis</h2>
+        </div>
+        <div>
+            <div>3 Valeurs potentielles</div>
+        </div>
     </div>
-    <div>
+    <div id="right_col">
         <div>
             <h2>Mes Graphiques</h2>
             @for((name, number, quoteInfoHistory) <- quotes_with_prices if number > 0) {
@@ -58,11 +78,6 @@
                 }
             }
         </div>
-        <div>
-            <h2>Mes Amis</h2>
-        </div>
     </div>
-    <div>
-        <div>3 Valeurs potentielles</div>
-    </div>
+
 }
