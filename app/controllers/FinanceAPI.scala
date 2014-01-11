@@ -89,21 +89,26 @@ object FinanceAPI extends Controller {
     }
   }
 
-  def quoteWithHistory(name: String) = Action.async { implicit request =>
+  def rawQuoteWithHistory(name: String) = {
     val resp = models.Quote.request(name)
     val respHist = models.Historic.request(name)
     val responseHist = Await result(respHist, 10 seconds)
     resp.map { response =>
-      try {
-        val result = models.Quote.parseResponse(response)
-        val resultHist = models.Historic.parseResponse(responseHist)
-        val quoteInfo = models.Quote.getQuoteInfo(result)
-        Ok(views.html.quote(quoteInfo, resultHist))
-      } catch {
-        case e: JsResultException =>
-          BadRequest(
-            views.html.error("The Quote requested doesn't exist or have value"))
-      }
+      val result = models.Quote.parseResponse(response)
+      val resultHist = models.Historic.parseResponse(responseHist)
+      val quoteInfo = models.Quote.getQuoteInfo(result)
+      Some((quoteInfo, resultHist))
+    }
+  }
+
+  def quoteWithHistory(name: String) = Action.async { implicit request =>
+    rawQuoteWithHistory(name).map {
+      case Some((quoteInfo, resultHist)) => Ok(views.html.quote(quoteInfo, resultHist))
+      // case None should never happen actually
+    }.recover {
+      case e: JsResultException =>
+        BadRequest(
+          views.html.error("The Quote requested doesn't exist or have value"))
     }
   }
 }

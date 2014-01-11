@@ -90,7 +90,7 @@ object UserModel {
         }
         case None => Nil
       },
-      obj.getAs[Int](score).get
+      obj.getAsOrElse(score, 0)
     )
 
   def create (user : User, newPassword : String) = {
