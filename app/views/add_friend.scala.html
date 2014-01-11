@@ -1,0 +1,20 @@
+@(form: Form[FriendData])(implicit request : Request[Any])
+
+@main("Yolo - Add a friend") {
+<div class="container">
+  @if(form.hasGlobalErrors) {
+    @for(error <- form.globalErrors) {
+      @error_div(error.message)
+    }
+  }
+  <form method="post" autocomplete="on">
+    <div class="form-group">
+      <label for="FriendUsername">Friend username</label>
+      <input type="text" name="username" class="form-control"
+      id="FriendUsername" placeholder="Enter username">
+    </div>
+    
+    <input type="submit" class="btn btn-default" value="Add friend">
+  </form>
+</div>
+}

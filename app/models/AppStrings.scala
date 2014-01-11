@@ -9,7 +9,8 @@ val errUsernameAlreadyInUse = "User name already in use"
 val errWrongPassword = "Wrong password"
 val errNotMatchingPasswords = "Passwords must match"
 val errEmptyFields = "Fields are empty"
-
+val errUserNotFound = "The user does not exist" 
+val errFriendAlreadyAdded = "This user is already one of your friends"
 
 }
 

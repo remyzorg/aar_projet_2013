@@ -89,6 +89,5 @@ object EditAccount extends Controller with Secured {
     )
   }
 
-
 }
 
