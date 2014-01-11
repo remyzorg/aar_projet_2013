@@ -4,8 +4,6 @@ import org.bson.types.ObjectId
 import com.mongodb.casbah.Imports._
 import scala.language.reflectiveCalls
 
-
-
 case class User (
   id : ObjectId,
   email : String,
@@ -17,7 +15,7 @@ case class User (
 
 case class TransactionObject (
   // id : ObjectId,
-  action : String,
+  action : OpAction,
   quote : String,
   price : Double,
   number : Int,
@@ -44,7 +42,8 @@ object UserModel {
   def toTransaction(obj: DBObject) = 
     TransactionObject (
       // obj.getAs[ObjectId](id).get,
-      obj.getAs[String](action).get,
+      if (obj.getAs[String](action).get == Transaction.BUY_ACTION)
+        BuyAction else SellAction,
       obj.getAs[String](quote).get,
       obj.getAs[Double](price).get,
       obj.getAs[Int](number).get,
@@ -53,7 +52,10 @@ object UserModel {
 
   def createTransactionObject(tr : TransactionObject) =
     MongoDBObject (
-      action -> tr.action,
+      action -> (tr.action match {
+        case BuyAction => "buy"
+        case SellAction => "sell"
+      }),
       quote -> tr.quote,
       price -> tr.price,
       number -> tr.number,
@@ -216,7 +218,7 @@ object UserModel {
 
 
   def opTransaction(targetEmail: String, 
-    action: String,
+    action: OpAction,
     from: String,
     price: Double,
     number: Int) = {

@@ -39,8 +39,8 @@
                 @for(transaction <- user.transactions.reverse) {
                 <li>
                     @transaction.action match {
-                    case "Buy" => { <span class="buy">Achat</span> }
-                    case "Sell" => { <span class="sell">Vente</span> }
+                    case BuyAction => { <span class="buy">Achat</span> }
+                    case SellAction => { <span class="sell">Vente</span> }
                     case _ => { @transaction.action }
                     }
                     : @transaction.number <a href="quote/@transaction.quote">@transaction.quote</a> pour
