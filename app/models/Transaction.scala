@@ -52,7 +52,7 @@ object Transaction {
     UserModel.opQuoteByCompany(email, from, number, (_-_))
     UserModel.opTransaction(email, SELL_ACTION, from, price, number)
 
-    Scoring.updateScore(user, from, price)
+    Scoring.updateScore(user, from, price, number)
   }
 
 }

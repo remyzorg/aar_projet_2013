@@ -13,7 +13,8 @@ case class User (
   capital : Double,
   quotes : Map[String, Int],
   transactions : List[TransactionObject],
-  score : Int
+  score : Int,
+  friends : List[String]
 )
 
 case class TransactionObject (
@@ -24,6 +25,8 @@ case class TransactionObject (
   number : Int,
   capital : Double
 )
+
+class UserNotFound(user: String) extends RuntimeException(user)
 
 object UserModel {
   import com.github.t3hnar.bcrypt._
@@ -37,6 +40,7 @@ object UserModel {
   val quotes = "quotes"
   val transactions = "transactions"
   val score = "score"
+  val friends = "friends"
   
   val action = "action"
   val quote = "quote"
@@ -90,8 +94,19 @@ object UserModel {
         }
         case None => Nil
       },
-      obj.getAs[Int](score).get
+      obj.getAs[Int](score) match {
+        case Some (d) => d
+        case None => 0
+      },
+      obj.getAs[MongoDBList](friends) match {
+        case Some (m : MongoDBList) => {
+          m.toList.asInstanceOf[List[String]]// .map 
+          // { obj => obj.getAs[String].get }
+        }
+        case None => Nil
+      }
     )
+
 
   def create (user : User, newPassword : String) = {
     val cryptedPassword = newPassword.bcrypt
@@ -104,7 +119,8 @@ object UserModel {
         capital -> user.capital,
         quotes -> user.quotes.asDBObject,
         transactions -> createTransactionList(user.transactions),
-        score -> user.score
+        score -> user.score,
+        friends -> user.friends
       )
     Database.user.save(obj)
   }
@@ -174,6 +190,25 @@ object UserModel {
         Database.user.update(target, $set(username -> s))
       case None => ()
     }
+  }
+
+  def addFriend(targetEmail: String, friendUsername: String) = {
+    val target = MongoDBObject(email -> targetEmail)
+    val obj = Database.user.findOne(target)
+
+    //check existence
+    findByUsername(friendUsername) match {
+      case Some(_) => ()
+      case None => throw new UserNotFound(friendUsername)
+    }
+
+    obj match {
+      case Some(obj) =>
+        Database.user.update(target, 
+          $push(friends -> friendUsername))
+      case None => ()
+    }
+
   }
 
 
