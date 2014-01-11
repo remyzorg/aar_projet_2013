@@ -1,35 +1,41 @@
 @()(implicit request : Request[Any])
 
 
-@main("Yolo - Home") {
+@header_main("Yolo Stocks Game - Home") {
+    <link href="@routes.Assets.at("stylesheets/home.css")"
+        rel="stylesheet" />
+} {
 <div id="main-yolo" class="container">
-	
+    <div class="hero-unit first-hero">
+        <div class="container">
+            <h1>Welcome on Yolo !</h1>
+            <p>
+                Because we only live once.
+                The app which makes you play like traders.
+            </p>
 
+            <p><a href="@routes.Signup.setup"
+                        class="btn btn-primary btn-large">
+                    Sign up &raquo;</a></p>
 
-
-				@request.session.get(Security.username) match {
-				case Some (u) =>{
-
-				Hi @u !
-				
-				}
-				case None => {
-				<div class="hero-unit">
-					<div class="container">
-						<h1>Welcome on Yolo !</h1>
-						<p>
-							Because we only live once.
-							The app which makes you play with your life.
-						</p>
-						<p><a href="@routes.Signup.setup"
-									class="btn btn-primary btn-large">
-								Sign up &raquo;</a></p>
-
-					</div>
-				</div>
-				}
-				}
-	
-	
+        </div>
+    </div>
+    <div class="hero-unit second-hero">
+        <div class="container">
+            <h1>Unique trading experience</h1>
+            <ul>
+                <li>Come and show your <span class="red-em">skills</span> to handle stocks among a <em>global</em> community.</li>
+                <li>Live it like you were in Wall Street and win like a <span class="red-em">pro.</span></li>
+                <li>With our state of the art tools, you will be able to exchange quotes as
+                fast as you can.</li>
+            </ul>
+            <p>
+                Sign up now and you will receive a capital of <span class="red-em">10,000</span> to begin !
+            </p>
+            <p><a href="@routes.Signup.setup"
+                  class="btn btn-primary btn-large">
+                Sign up &raquo;</a></p>
+        </div>
+    </div>
 </div>
 }

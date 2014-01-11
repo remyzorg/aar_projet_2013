@@ -39,6 +39,7 @@ object Quote extends Finance {
   def getValue(value : JsValue, name : String) : JsValue = value \ name
 
   def getQuoteInfo(value : JsValue) : QuoteInfo = QuoteInfo (
+    getValue(value, "Name").as[String],
     getValue(value, "symbol").as[String],
     getValue(value, "Ask").as[String].toDouble,
     getValue(value, "Bid").as[String].toDouble,

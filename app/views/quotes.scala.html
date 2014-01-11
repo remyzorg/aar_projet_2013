@@ -3,11 +3,11 @@
 @main("Yolo - Multiple quotes") {
 <div class="container">
   <p>The actual quote values that are available are:
-  <ul>
+  <dl class="dl-horizontal">
     @for(quoteInfo <- values) {
-      <li><a href="/quote/@quoteInfo.name">@quoteInfo.name</a>: Buy for @quoteInfo.ask, Selling for @quoteInfo.bid</li>
+      <dt>@quoteInfo.longName</dt><dd><a href="/quote/@quoteInfo.name">@quoteInfo.name</a>:  @quoteInfo.changePercentage  : Buy for @quoteInfo.ask</dd>
       }
-  </ul>
+  </dl>
   </p>
 <div>
 }

@@ -31,7 +31,10 @@ object FinanceAPI extends Controller {
   }
 
   def multipleQuotes = Action.async { implicit request =>
-    val quotes = "goog" :: "yhoo" :: "msft" :: "aapl" :: "aal" :: Nil
+    val quotes = List("goog", "yhoo", "msft", "aapl", "aal", "adbe", "adsk",
+      "ea", "ebay", "gilt", "has", "jack", "lmia", "mat", "mdci", "nflx", "optt",
+      "qiwi", "regi", "scvl", "thff", "thld", "tivo", "useg", "via", "volc", "vrsn",
+      "wdc", "wix", "xwes", "zbra" )
     rawMultipleQuotes(quotes).map { values =>
         Ok(views.html.quotes(values))
     }.recover {

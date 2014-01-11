@@ -68,7 +68,7 @@ trait SecuredAsync {
     }
   }
 
-def withUser(f: User => Request[AnyContent] => Future[SimpleResult]) =
+  def withUser(f: User => Request[AnyContent] => Future[SimpleResult]) =
     withAuth { username => implicit request =>
     UserModel.findByEmail(username) match {
       case Some(user) => f(user)(request)

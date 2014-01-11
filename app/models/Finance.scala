@@ -9,6 +9,7 @@ import play.api.data.validation.ValidationError
 import com.fasterxml.jackson.core.JsonParseException
 
 case class QuoteInfo (
+  longName: String,
   name : String,
   ask : Double,
   bid : Double,
