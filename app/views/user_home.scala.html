@@ -29,8 +29,13 @@
                         <td><span class="quote_name"><a href="quote/@name">@name</a></span></td>
                         @quoteInfo match {
                            case Some((quoteInfo, history)) => {
-                                <td> @{"%1.2f" format (quoteInfo.bidRealtime * number)} (@{"%1.2f" format quoteInfo.bidRealtime} unit.)</td>
-                                <td>@quoteInfo.changePercentage</td>
+                                @quoteInfo.bidRealtime match {
+                                  case Some(price) => {
+                                    <td> @{"%1.2f" format (price * number)} (@{"%1.2f" format price} unit.)</td>
+                                    <td>@quoteInfo.changePercentage</td>
+                                  }
+                                  case None => { <td>Indispo</td> <td>Indispo</td> }
+                                }
                            }
                            case None => { <td>Indispo</td> <td>Indispo</td> }
                         }
@@ -39,7 +44,12 @@
             </table>
             <span>Total des valeurs disponibles :
                 @defining(quotes_with_prices.foldLeft(0.0){
-                    case (acc, (_, quantity, Some((quoteInfo, history)))) => acc + quantity * quoteInfo.bidRealtime
+                    case (acc, (_, quantity, Some((quoteInfo, history)))) => {
+                      quoteInfo.bidRealtime match {
+                        case Some(price) => acc + quantity * price
+                        case None => acc
+                      }
+                    }
                     case (acc, (_, quantity, None)) => acc }
                 ){total =>
                     <span class="total">@{"%1.2f" format total}</span>

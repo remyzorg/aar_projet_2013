@@ -4,15 +4,16 @@ object Scoring {
 
   def transactionValue(price: Double, transaction: TransactionObject) = {
 
-    val diff = (transaction.price / price) * 100
+  
+    val diff = price - transaction.price
+    val percent = (Math.abs(diff) / transaction.price) * 100
     val score = 
-      if (diff < 5) 1
-      else if (diff < 10) 2
-      else if (diff < 15) 3
+      if (percent < 5) 1
+      else if (percent < 10) 2
+      else if (percent < 15) 3
       else 4
   
-    val sign = transaction.price - price
-    if (sign < 0) -score else score
+    if (diff < 0) -score else score
   }
 
   def updateScore(user: User, from: String, price: Double, number: Int) {

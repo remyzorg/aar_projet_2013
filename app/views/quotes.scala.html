@@ -5,8 +5,17 @@
   <p>The actual quote values that are available are:
   <dl class="dl-horizontal">
     @for(quoteInfo <- values) {
-      <dt>@quoteInfo.longName</dt><dd><a href="/quote/@quoteInfo.name">@quoteInfo.name</a>:  @quoteInfo.changePercentage  : Buy for @quoteInfo.ask</dd>
+      <dt>@quoteInfo.longName</dt><dd><a href="/quote/@quoteInfo.name">@quoteInfo.name</a> : 
+        @quoteInfo.ask match {
+          case Some(price) => { Buy for @price,} 
+          case None => { }
+        }
+        @quoteInfo.bid match {
+          case Some(price) => { Selling for @price }
+          case None => { }
+        }
       }
+    </dd>
   </dl>
   </p>
 <div>
