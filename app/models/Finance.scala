@@ -10,10 +10,10 @@ import com.fasterxml.jackson.core.JsonParseException
 
 case class QuoteInfo (
   name : String,
-  ask : Double,
-  bid : Double,
-  askRealtime : Double,
-  bidRealtime : Double,
+  ask : Option[Double],
+  bid : Option[Double],
+  askRealtime : Option[Double],
+  bidRealtime : Option[Double],
   changePercentage : String,
   change: Double,
   daysLow : Double,

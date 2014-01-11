@@ -40,10 +40,26 @@ object Quote extends Finance {
 
   def getQuoteInfo(value : JsValue) : QuoteInfo = QuoteInfo (
     getValue(value, "symbol").as[String],
-    getValue(value, "Ask").as[String].toDouble,
-    getValue(value, "Bid").as[String].toDouble,
-    getValue(value, "AskRealtime").as[String].toDouble,
-    getValue(value, "BidRealtime").as[String].toDouble,
+    try { Some(getValue(value, "Ask").as[String].toDouble) } 
+    catch {
+      case e: JsResultException => None
+    },
+    try { Some(getValue(value, "Bid").as[String].toDouble) }
+    catch {
+      case e: JsResultException => None
+    },
+    try { val ask = getValue(value, "AskRealtime").as[String].toDouble
+      if (ask == 0.0) None else Some(ask)
+    }
+    catch {
+      case e: JsResultException => None
+    },
+    try { val bid = getValue(value, "BidRealtime").as[String].toDouble
+      if (bid == 0.0) None else Some(bid)
+    }
+    catch {
+      case e: JsResultException => None
+    },
     getValue(value, "Change_PercentChange").as[String],
     getValue(value, "ChangeRealtime").as[String].toDouble,
     getValue(value, "DaysLow").as[String].toDouble,

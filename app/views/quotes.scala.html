@@ -5,7 +5,16 @@
   <p>The actual quote values that are available are:
   <ul>
     @for(quoteInfo <- values) {
-      <li><a href="/quote/@quoteInfo.name">@quoteInfo.name</a>: Buy for @quoteInfo.ask, Selling for @quoteInfo.bid</li>
+      <li><a href="/quote/@quoteInfo.name">@quoteInfo.name</a>: 
+        @quoteInfo.ask match {
+          case Some(price) => { Buy for @price,} 
+          case None => { }
+        }
+        @quoteInfo.bid match {
+          case Some(price) => { Selling for @price }
+          case None => { }
+        }
+      </li>
       }
   </ul>
   </p>

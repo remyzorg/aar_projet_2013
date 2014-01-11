@@ -27,18 +27,25 @@ object Operation extends Controller with SecuredAsync {
           (quoteInfo.askRealtime, Transaction.buy _)
         else (quoteInfo.bidRealtime, Transaction.sell _)
 
-      try {
-        operation(mail, fromUpper, price, number)
-        if (action == Transaction.BUY_ACTION)
-          Ok(views.html.buy(fromUpper, number, price.toString))
-        else Ok(views.html.sell(fromUpper, number, price.toString))
-      }
-      catch {
-        case e: TransactionException =>
-          Ok(e.getMessage)
-        case e: TransactionNotConnected => onUnauthorized(request)
-        case e: JsResultException =>
-          BadRequest(views.html.error(e.getMessage))
+      price match {
+        case Some(price) =>
+          {
+            try {
+              operation(mail, fromUpper, price, number)
+              if (action == Transaction.BUY_ACTION)
+                Ok(views.html.buy(fromUpper, number, price.toString))
+              else Ok(views.html.sell(fromUpper, number, price.toString))
+            }
+            catch {
+              case e: TransactionException =>
+                Ok(e.getMessage)
+              case e: TransactionNotConnected => onUnauthorized(request)
+              case e: JsResultException =>
+                BadRequest(views.html.error(e.getMessage))
+            }
+          }
+        case None =>
+          BadRequest(views.html.error("The price for this action is unavailable"))
       }
     }
   }
