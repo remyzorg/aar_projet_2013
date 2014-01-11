@@ -46,3 +46,5 @@ GET    /quote/sub/:from/:value      controllers.Debug.opQuote(from:String,value:
 
 GET    /capital/add/:value      controllers.Debug.opCapital(value:Double, op : Boolean=true)
 GET    /capital/sub/:value      controllers.Debug.opCapital(value:Double, op : Boolean=false)
+
+GET    /users/updateall         controllers.Debug.update
