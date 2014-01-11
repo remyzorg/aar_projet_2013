@@ -22,9 +22,9 @@ object Application extends Controller with SecuredAsync {
 
     Future.traverse(user_data.quotes) {
       case (quote, quantity) => for {
-        quoteInfo <- FinanceAPI.rawQuote(quote).recover {
+        quoteInfoHistory <- FinanceAPI.rawQuoteWithHistory(quote).recover {
           case e :  JsResultException => None }
-      } yield (quote, quantity, quoteInfo)
+      } yield (quote, quantity, quoteInfoHistory)
     }.map {values =>
       Ok(views.html.user_home(user_data, values))
     }

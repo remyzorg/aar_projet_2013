@@ -2,42 +2,40 @@
 
 @main("Yolo - Quote prices for " + quoteInfo.name) {
 <div class="container">
-  <p>Be aware that the price can change between now and the time you chose to
-    buy.<br />
+    <h2>@quoteInfo.name - @quoteInfo.bidRealtime
+        <!-- Large button group -->
+        <div class="btn-group">
+            <button class="btn btn-default btn-lg dropdown-toggle" type="button" data-toggle="dropdown">
+                Buy <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                @for(value <- List(1, 2, 3, 10, 20)) {
+                <li><a href="@routes.Operation.opStock("buy",quoteInfo.name, value)">@value for @{"%1.2f" format (quoteInfo.bidRealtime * value)}</a></li>
+                }
+            </ul>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-default btn-lg dropdown-toggle" type="button" data-toggle="dropdown">
+                Sell <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                @for(value <- List(1, 2, 3, 10, 20)) {
+                <li><a href="@routes.Operation.opStock("sell",quoteInfo.name, value)">@value for @{"%1.2f" format (quoteInfo.askRealtime * value)}</a></li>
+                }
+            </ul>
+        </div>
+    </h2>
+    <p>
+        <dl class="dl-horizontal">
+            <dt>Change</dt><dd>@quoteInfo.changePercentage</dd>
+            <dt>Day's high</dt><dd>@quoteInfo.daysHigh</dd>
+            <dt>Day's low</dt><dd>@quoteInfo.daysLow</dd>
+        </dl>
+        @chart(values)
 
-    The actual buying price for @quoteInfo.name is @quoteInfo.bid.
+        Be aware that the price can change between now and the time you chose to
+            buy.<br />
 
-    You can buy one by clicking
-    <a href="@routes.Operation.opStock("buy",quoteInfo.name,1)">here</a>.
-    <br />
-
-    You can sell
-    one <a href="@routes.Operation.opStock("sell",quoteInfo.name,1)">here</a> 
-    (if you possess it).
-    <br />
-
-    <canvas id="historyChart" width="400" height="250"></canvas>
-
-    <script>
-      var ctx = $("#historyChart").get(0).getContext("2d");
-      var dates = [ @for((date, _) <- values) { "@date", } ]
-      var prices = [ @for((_, price) <- values) { @price, } ]
-      
-      var data = {
-      	labels : dates,
-      	datasets : [
-      		{
-      			fillColor : "rgba(220,220,220,0.5)",
-      			strokeColor : "rgba(220,220,220,1)",
-      			pointColor : "rgba(220,220,220,1)",
-      			pointStrokeColor : "#fff",
-      			data : prices
-      		}
-      	]
-      }
-      var myNewChart = new Chart(ctx).Line(data);
-      </script>
-      
-  </p>
+    </p>
 </div>
 }

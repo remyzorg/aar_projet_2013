@@ -16,8 +16,8 @@ case class QuoteInfo (
   bidRealtime : Double,
   changePercentage : String,
   change: Double,
-  dayLow : Double,
-  dayHigh : Double,
+  daysLow : Double,
+  daysHigh : Double,
   volume : Int
 )
 

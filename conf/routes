@@ -17,7 +17,6 @@ GET     /logout                     controllers.Auth.logout
 
 GET     /account/edit               controllers.EditAccount.setup
 POST    /account/edit               controllers.EditAccount.edit
-GET     /account/finance            controllers.AccountFinance.setup
 
 # Add and remove friend
 

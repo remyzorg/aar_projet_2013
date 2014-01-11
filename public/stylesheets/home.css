@@ -1,0 +1,44 @@
+#content {
+    max-width: 1100px;
+    min-width: 800px;
+    margin: 0 auto;
+}
+
+#top_panel {
+
+}
+
+#left_col, #right_col {
+    display: inline-block;
+    vertical-align: top;
+    max-width: 535px;
+    min-width: 385px;
+}
+
+#left_col {
+    margin-right: 30px;
+}
+
+.score_panel, .capital_panel {
+    display: inline-block;
+}
+
+.score_panel {
+    margin-right: 100px;
+}
+
+.score {
+    color: orange;
+}
+
+.capital {
+    color: limegreen;
+}
+
+.quote_name, .quote_number {
+    font-weight: bold;
+}
+
+.quote_number {
+    color: darkgray;
+}
