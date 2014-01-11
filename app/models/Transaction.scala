@@ -8,12 +8,18 @@ import play.api.libs.ws._
 class TransactionException(msg: String) extends RuntimeException(msg)
 class TransactionNotConnected extends RuntimeException
 
+abstract sealed class OpAction ()
+case object SellAction extends OpAction
+case object BuyAction extends OpAction
+
 object Transaction {
 
   val START_CAPITAL = 10000.0
   val LIMIT = -1000.0
   val SELL_ACTION = "sell"
   val BUY_ACTION = "buy"
+
+
 
   def buy(email : String, from: String, price: Double, number: Int) = {
     
@@ -29,7 +35,7 @@ object Transaction {
 
     UserModel.opCapital(email, money, (_-_))
     UserModel.opQuoteByCompany(email, from, number, (_+_))
-    UserModel.opTransaction(email, BUY_ACTION, from, price, number)
+    UserModel.opTransaction(email, BuyAction, from, price, number)
   }
 
 
@@ -50,9 +56,9 @@ object Transaction {
 
     UserModel.opCapital(email, money, (_+_))
     UserModel.opQuoteByCompany(email, from, number, (_-_))
-    UserModel.opTransaction(email, SELL_ACTION, from, price, number)
+    UserModel.opTransaction(email, SellAction, from, price, number)
 
-    Scoring.updateScore(user, from, price)
+    Scoring.updateScore(user, from, price, number)
   }
 
 }

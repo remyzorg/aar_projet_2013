@@ -21,11 +21,17 @@ object Operation extends Controller with SecuredAsync {
     resp.map { response =>
       val result = Quote.parseResponse(response)
       val quoteInfo = Quote.getQuoteInfo(result)
-      val price = quoteInfo.askRealtime
-      // The price.as[Double] doesn't work, for now it is the only solution
+
+      val (price, operation) =
+        if (action == Transaction.BUY_ACTION)
+          (quoteInfo.askRealtime, Transaction.buy _)
+        else (quoteInfo.bidRealtime, Transaction.sell _)
+
       try {
-        Transaction.buy(mail, from, price, number)
-        Ok(views.html.buy(from, number, price.toString))
+        operation(mail, fromUpper, price, number)
+        if (action == Transaction.BUY_ACTION)
+          Ok(views.html.buy(fromUpper, number, price.toString))
+        else Ok(views.html.sell(fromUpper, number, price.toString))
       }
       catch {
         case e: TransactionException =>

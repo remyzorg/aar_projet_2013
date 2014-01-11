@@ -4,8 +4,6 @@ import org.bson.types.ObjectId
 import com.mongodb.casbah.Imports._
 import scala.language.reflectiveCalls
 
-
-
 case class User (
   id : ObjectId,
   email : String,
@@ -13,17 +11,20 @@ case class User (
   capital : Double,
   quotes : Map[String, Int],
   transactions : List[TransactionObject],
-  score : Int
+  score : Int,
+  friends : List[String]
 )
 
 case class TransactionObject (
   // id : ObjectId,
-  action : String,
+  action : OpAction,
   quote : String,
   price : Double,
   number : Int,
   capital : Double
 )
+
+class UserNotFound(user: String) extends RuntimeException(user)
 
 object UserModel {
   import com.github.t3hnar.bcrypt._
@@ -37,6 +38,7 @@ object UserModel {
   val quotes = "quotes"
   val transactions = "transactions"
   val score = "score"
+  val friends = "friends"
   
   val action = "action"
   val quote = "quote"
@@ -46,7 +48,8 @@ object UserModel {
   def toTransaction(obj: DBObject) = 
     TransactionObject (
       // obj.getAs[ObjectId](id).get,
-      obj.getAs[String](action).get,
+      if (obj.getAs[String](action).get == Transaction.BUY_ACTION)
+        BuyAction else SellAction,
       obj.getAs[String](quote).get,
       obj.getAs[Double](price).get,
       obj.getAs[Int](number).get,
@@ -55,7 +58,10 @@ object UserModel {
 
   def createTransactionObject(tr : TransactionObject) =
     MongoDBObject (
-      action -> tr.action,
+      action -> (tr.action match {
+        case BuyAction => "buy"
+        case SellAction => "sell"
+      }),
       quote -> tr.quote,
       price -> tr.price,
       number -> tr.number,
@@ -91,7 +97,15 @@ object UserModel {
         case None => Nil
       },
       obj.getAsOrElse(score, 0)
+      obj.getAs[MongoDBList](friends) match {
+        case Some (m : MongoDBList) => {
+          m.toList.asInstanceOf[List[String]]// .map 
+          // { obj => obj.getAs[String].get }
+        }
+        case None => Nil
+      }
     )
+
 
   def create (user : User, newPassword : String) = {
     val cryptedPassword = newPassword.bcrypt
@@ -104,7 +118,8 @@ object UserModel {
         capital -> user.capital,
         quotes -> user.quotes.asDBObject,
         transactions -> createTransactionList(user.transactions),
-        score -> user.score
+        score -> user.score,
+        friends -> user.friends
       )
     Database.user.save(obj)
   }
@@ -176,6 +191,25 @@ object UserModel {
     }
   }
 
+  def addFriend(targetEmail: String, friendUsername: String) = {
+    val target = MongoDBObject(email -> targetEmail)
+    val obj = Database.user.findOne(target)
+
+    //check existence
+    findByUsername(friendUsername) match {
+      case Some(_) => ()
+      case None => throw new UserNotFound(friendUsername)
+    }
+
+    obj match {
+      case Some(obj) =>
+        Database.user.update(target, 
+          $push(friends -> friendUsername))
+      case None => ()
+    }
+
+  }
+
 
   def opCapital(targetEmail: String, value: Double,
     op : (Double, Double) => Double){
@@ -220,7 +254,7 @@ object UserModel {
 
 
   def opTransaction(targetEmail: String, 
-    action: String,
+    action: OpAction,
     from: String,
     price: Double,
     number: Int) = {

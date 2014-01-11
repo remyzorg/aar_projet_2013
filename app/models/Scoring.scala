@@ -15,12 +15,12 @@ object Scoring {
     if (sign < 0) -score else score
   }
 
-  def updateScore(user: User, from: String, price: Double) {
+  def updateScore(user: User, from: String, price: Double, number: Int) {
     val transaction = UserModel.getLastTransactionFrom(user, from, Transaction.BUY_ACTION)
 
     transaction match {
       case Some(tr) =>
-        val score = transactionValue(price, tr)
+        val score = transactionValue(price, tr) * number
         val prevScore = try {
           user.score
         } catch {

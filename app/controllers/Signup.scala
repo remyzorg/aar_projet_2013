@@ -50,7 +50,7 @@ object Signup extends Controller {
       errors => BadRequest(views.html.signup(errors)),
       user => user match { case (email, username, password, confirm) =>
         UserModel.create (User (new ObjectId(),
-          email, username, Transaction.START_CAPITAL, Map(), Nil, 0), password);
+          email, username, Transaction.START_CAPITAL, Map(), Nil, 0, Nil), password);
         Redirect(routes.Application.index)
           .withSession(Security.username -> email)
       }
