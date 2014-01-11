@@ -19,7 +19,11 @@ object Transaction {
   val SELL_ACTION = "sell"
   val BUY_ACTION = "buy"
 
-
+  def stringOfAction(act: OpAction) = 
+    act match {
+      case SellAction => "sell"
+      case BuyAction => "buy"
+    }
 
   def buy(email : String, from: String, price: Double, number: Int) = {
     
