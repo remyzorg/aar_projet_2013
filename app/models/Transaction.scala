@@ -9,10 +9,16 @@ import controllers.AchievementsUnlocker
 class TransactionException(msg: String) extends RuntimeException(msg)
 class TransactionNotConnected extends RuntimeException
 
+/**
+  * Sum type representing an action
+  */
 abstract sealed class OpAction ()
 case object SellAction extends OpAction
 case object BuyAction extends OpAction
 
+/**
+  Computes the transaction
+  */
 object Transaction {
 
   val START_CAPITAL = 10000.0
@@ -78,8 +84,6 @@ object Transaction {
     AchievementsUnlocker.unlockFirstSell(user)
     AchievementsUnlocker.unlockLotOfSells(user)
     AchievementsUnlocker.unlockMoneyGain(user, rawScore)
-
-
 
     (earned, score)
   }

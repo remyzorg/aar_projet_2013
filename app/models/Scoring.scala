@@ -6,8 +6,14 @@ import scala.concurrent.duration._
 
 case class RankingInfo(username: String, capital: Double, score: Int)
 
+/**
+  * Computes all the scoring
+  */
 object Scoring {
 
+  /**
+    * In the case of selling, computes the gain or loss
+    */
   def transactionValue(price: Double, transaction: TransactionObject) = {
   
     val diff = price - transaction.price
@@ -22,6 +28,9 @@ object Scoring {
     if (diff < 0) -score else score
   }
 
+  /**
+    * Evaluates the risk taken while buying a stock
+    */
   def riskValue(tradePrice: Double, from: String): Int = {
     val req = Historic.request(from)
     try {
@@ -79,7 +88,6 @@ object Scoring {
     }
 
     val users: List[RankingInfo] = RankingInfo(user.username, user.capital, user.score) :: friends
-
     users.sortBy({ user => user.score }).reverse
   }
 

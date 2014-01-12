@@ -1,5 +1,8 @@
 package models
 
+/**
+  * Some errors messages and possibly other messages that can be used by all
+  */
 object AppStrings {
 
 val errNotEnoughMoney = "Not enough money"

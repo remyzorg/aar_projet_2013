@@ -6,6 +6,9 @@ import play.api.libs.ws._
 
 import java.util.Date
 
+/**
+  * Asks for the last 14 days history of a Stock quote
+  */ 
 object Historic extends Finance {
 
   val dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd")

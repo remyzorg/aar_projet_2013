@@ -4,13 +4,38 @@ import play.api.libs.json._
 import play.api.libs.ws.WS._
 import play.api.libs.ws._
 
+/** 
+  * Symbolizes a quote received
+  */
+case class QuoteInfo (
+  longName: String,
+  name : String,
+  ask : Option[Double],
+  bid : Option[Double],
+  askRealtime : Option[Double],
+  bidRealtime : Option[Double],
+  lastTradePrice : Option[Double],
+  changePercentage : String,
+  change: Double,
+  daysLow : Double,
+  daysHigh : Double,
+  volume : Int
+)
+
+
 object Quote extends Finance {
 
+  /**
+    * Request a unique quote value
+    */ 
   def request(name: String) = {
     val arg = "symbol in (\"" ++ name ++ "\")"
     processRequest("yahoo.finance.quotes", arg)
   }
 
+  /** 
+    * Request for multiple quotes
+    */ 
   def request(names: List[String]) = {
     val arg = "symbol in (\"" ++ names.mkString(",") ++ "\")"
     processRequest("yahoo.finance.quotes", arg)
@@ -18,10 +43,12 @@ object Quote extends Finance {
 
   def parseResponse(response: Response) = {
     val res = parseBodyResponse(response) \ "quote"
-    println(Json.prettyPrint(res))
-    res // Json.prettyPrint(res)
+    res
   }
 
+  /** 
+    * Takes as JSON and returns all the quotes it contains
+    */
   def getMultipleValues(json: JsValue) : List[QuoteInfo] = {
     val sequence = json.as[JsArray].value
     def fun(acc: List[QuoteInfo], json: JsValue) = {
@@ -31,13 +58,17 @@ object Quote extends Finance {
         case e: JsResultException => acc
       }
     }
-
-    val res = sequence.foldLeft(List.empty[QuoteInfo])(fun)
-    res
+    sequence.foldLeft(List.empty[QuoteInfo])(fun)
   }
 
+  /**
+    * Returns the value of the field "name"
+    */
   def getValue(value : JsValue, name : String) : JsValue = value \ name
 
+  /**
+    * Creates a QuoteInfo from a JSON value
+    */
   def getQuoteInfo(value : JsValue) : QuoteInfo = QuoteInfo (
     getValue(value, "Name").as[String],
     getValue(value, "symbol").as[String],
