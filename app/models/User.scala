@@ -62,7 +62,7 @@ object UserModel {
       obj.getAs[Double](price).get,
       obj.getAs[Int](number).get,
       obj.getAs[Double](capital).get,
-      obj.getAsOrElse(date, "2014-01-12T00:00:00.316+01:00").get
+      obj.getAsOrElse(date, "2014-01-12T00:00:00.316+01:00")
     )
 
   def createTransactionObject(tr : TransactionObject) =
