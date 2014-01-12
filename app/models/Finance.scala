@@ -15,6 +15,7 @@ case class QuoteInfo (
   bid : Option[Double],
   askRealtime : Option[Double],
   bidRealtime : Option[Double],
+  lastTradePrice : Option[Double],
   changePercentage : String,
   change: Double,
   daysLow : Double,
@@ -32,6 +33,8 @@ abstract class Finance {
   def processRequest(table: String, args: String) = { 
     val query = ("q", "select * from " ++ table ++ " where " ++ args ++ "")
     val holder = WS.url(api).withQueryString(query, format, env)
+    println(api + "?q="+ query._2 + "&env=" + env._2 + "&format=json")
+
     val futureResponse : Future[Response] = holder.get()
     futureResponse
   }
