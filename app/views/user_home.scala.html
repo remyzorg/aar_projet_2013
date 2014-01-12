@@ -2,6 +2,11 @@
 achievements : Iterable[Option[Achievement]])(implicit request : Request[Any])
 
 
+@import org.joda.time.DateTime
+@import org.joda.time.format.DateTimeFormatter
+@import org.joda.time.format.DateTimeFormat
+
+
 @header_main("Yolo - Home") {
 <link href="@routes.Assets.at("stylesheets/home.css")"
       rel="stylesheet" />
@@ -85,6 +90,7 @@ achievements : Iterable[Option[Achievement]])(implicit request : Request[Any])
     <h2>My Transactions</h2>
     <table class="table table-hover table-striped">
 			<tr>
+				<th>Date</th>
 				<th>Operation</th>
 				<th>Stock</th>
 				<th>Quant.</th>
@@ -94,6 +100,7 @@ achievements : Iterable[Option[Achievement]])(implicit request : Request[Any])
 			</tr>
       @for(transaction <- user.transactions.reverse) {
 													<tr>
+														<td>@DateTime.parse(transaction.date).toString("MM-dd-yyyy")</td>
 														@transaction.action match {
 														case BuyAction => { <td class="buy">Achat</td> }
         case SellAction => { <td class="sell">Vente</td> }
