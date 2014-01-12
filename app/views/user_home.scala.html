@@ -31,15 +31,14 @@ achievements : Iterable[Option[Achievement]])(implicit request : Request[Any])
 
 
 @if(quotes_with_prices.isEmpty){
-<div id="left_col" class="well">
+<div id="left_col">
+	<div class="well">
 		<h2>My Stocks : </h2>
 <p><a href="@routes.Application.rules"
       class="btn btn-primary btn-large">
     Read the rules before &raquo;</a> </p>
 </div>
-}
-
-@if(!quotes_with_prices.isEmpty){
+} else {
 <div id="left_col">
 <div class="well">
   <div>
@@ -177,9 +176,9 @@ achievements : Iterable[Option[Achievement]])(implicit request : Request[Any])
 
 
 
+@if(!quotes_with_prices.isEmpty){
 <div id="right_col">
 <div class="well">
-@if(!quotes_with_prices.isEmpty){
   <div>
     <h2>My Graphs</h2>
     @for((name, number, quoteInfoHistory) <- quotes_with_prices if number > 0) {
@@ -189,9 +188,9 @@ achievements : Iterable[Option[Achievement]])(implicit request : Request[Any])
       }
       }
   </div>
+</div>
+</div>
 }
-</div>
-</div>
 
 
 
