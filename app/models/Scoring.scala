@@ -50,8 +50,8 @@ object Scoring {
       case Some(tr) =>
         val rawScore = transactionValue(price, tr)
         val score = rawScore * number
-        UserModel.opScore(user.email, user.score + score)
-        (rawScore, score, user.score)
+        UserModel.opIncScore(user.email, score)
+        (rawScore, score, user.score + score)
       case None => (0, 0, user.score)
     }
   }
@@ -61,8 +61,8 @@ object Scoring {
     tradePrice: Double): (Int, Int, Int) = {
     val rawScore = riskValue(price, from)
     val score = rawScore * number
-    UserModel.opScore(user.email, user.score + score)
-    (rawScore, score, user.score)
+    UserModel.opIncScore(user.email, score)
+    (rawScore, score, user.score + score)
   }
 
   def ranking(user : User): List[RankingInfo] = {

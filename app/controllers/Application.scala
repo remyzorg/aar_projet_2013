@@ -6,13 +6,10 @@ import play.api._
 import play.api.libs.json._
 import play.api.mvc._
 
-import models.Finance
-import models.UserModel
+import models.{Message, Finance, UserModel}
 import play.api.libs.concurrent.Execution.Implicits._
 
 object Application extends Controller with SecuredAsync {
-
-  // I had to avoid withUser for conditional rendering
 
   def index = Action { implicit request =>
     session.get(Security.username) match {
@@ -21,7 +18,6 @@ object Application extends Controller with SecuredAsync {
     }
   }
 
-
   def indexAuth = withUser { user_data => implicit request =>
     Future.traverse(user_data.quotes) {
       case (quote, quantity) => for {
@@ -29,7 +25,9 @@ object Application extends Controller with SecuredAsync {
           case e :  JsResultException => None }
       } yield (quote, quantity, quoteInfoHistory)
     }.map {values =>
-      Ok(views.html.user_home(user_data, values))
+      val messages = Message.getAllUnreadMessages(user_data).toList
+      for(message <- messages) Message.setRead(message)
+      Ok(views.html.user_home(user_data, messages, values))
     }
   }
 }

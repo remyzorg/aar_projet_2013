@@ -287,17 +287,19 @@ object UserModel {
     }
   }
 
-  def opScore(targetEmail: String, newScore: Int) = {
+  def opIncScore(targetEmail: String, delta: Int) = {
     val target = MongoDBObject(email -> targetEmail)
     val obj = Database.user.findOne(target)
 
     obj match {
       case Some(obj) =>
         Database.user.update(target,
-          $set(score -> newScore))
+          $inc(score -> delta))
       case None => ()
     }
   }
+
+  def opDecScore(targetEmail: String, delta: Int) = opIncScore(targetEmail, -delta)
 
   def addAchievement(targetEmail: String, achievement: Achievement) = {
     val target = MongoDBObject(email -> targetEmail)

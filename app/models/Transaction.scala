@@ -3,6 +3,7 @@ package models
 import play.api.libs.json._
 import play.api.libs.ws.WS._
 import play.api.libs.ws._
+import controllers.AchievementsUnlocker
 
 
 class TransactionException(msg: String) extends RuntimeException(msg)
@@ -41,8 +42,8 @@ object Transaction {
     UserModel.opQuoteByCompany(email, from, number, (_+_))
     UserModel.opTransaction(email, BuyAction, from, price, number)
 
-    if (!(user.achievements.exists {achId => achId == Achievements.firstBuy}))
-      UserModel.addAchievement(email, Achievements.firstBuy)
+    AchievementsUnlocker.unlockFirstBuy(user)
+    AchievementsUnlocker.unlockLotOfBuys(user)
 
     val (rawScore, earned, score) = Scoring.updateScoreBuy(user, from, price, number, tradePrice)
 
@@ -69,6 +70,9 @@ object Transaction {
     UserModel.opCapital(email, money, (_+_))
     UserModel.opQuoteByCompany(email, from, number, (_-_))
     UserModel.opTransaction(email, SellAction, from, price, number)
+
+    AchievementsUnlocker.unlockFirstSell(user)
+    AchievementsUnlocker.unlockLotOfSells(user)
 
     val (rawScore, earned, score) = Scoring.updateScoreSell(user, from, price, number, tradePrice)
 

@@ -1,19 +1,25 @@
-@(user : User, quotes_with_prices : Iterable[(String, Int, Option[(QuoteInfo, List[(String, Double)])])])(implicit request : Request[Any])
+@(user : User, messages : Iterable[Message], quotes_with_prices : Iterable[(String, Int, Option[(QuoteInfo, List[(String, Double)])])])(implicit request : Request[Any])
 
 
 @header_main("Yolo - Home") {
 <link href="@routes.Assets.at("stylesheets/home.css")"
       rel="stylesheet" />
 } {
+@for(message <- messages) {
+    <div class="alert alert-success alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>@message.subject</strong> @message.body
+    </div>
+}
+
+
 <div id="top_panel" class="well" >
-	<center>
   <div class="score_panel">
     <h2>Score : <span class="score">@user.score</span> </h2>
   </div>
   <div class="capital_panel">
     <h2>Capital : <span class="capital">@{"%1.2f" format user.capital}</span> </h2>
   </div>
-	</center>
 </div>
 
 
@@ -32,13 +38,13 @@ You have <span class="red-em">no quotes</span>.
 <div id="left_col">
   <div>
 		
-		<h2>Mes Actions : </h2>
+		<h2>My Stocks : </h2>
 		<table class="table table-hover">
 			<tr>
 				<th>Quant.</th>
-				<th>Action</th>
-				<th>Valeur</th>
-				<th>Changement</th>
+				<th>Stock</th>
+				<th>Value</th>
+				<th>Change</th>
 			</tr>
 			@for((name, number, quoteInfo) <- quotes_with_prices if number > 0) {
 				<tr>
@@ -75,14 +81,14 @@ You have <span class="red-em">no quotes</span>.
 		</span>
   </div>
   <div>
-    <h2>Mes Transactions</h2>
+    <h2>My Transactions</h2>
     <table class="table table-hover table-striped">
 			<tr>
 				<th>Operation</th>
-				<th>Action</th>
+				<th>Stock</th>
 				<th>Quant.</th>
-				<th>Valeur</th>
-				<th>prix unit.</th>
+				<th>Value</th>
+				<th>price unit.</th>
 				<th>Capital</th>
 			</tr>
       @for(transaction <- user.transactions.reverse) {
@@ -94,9 +100,9 @@ You have <span class="red-em">no quotes</span>.
         }
 				<td><a href="quote/@transaction.quote">@transaction.quote</td>
         <td>@transaction.number</td>
-        <td>@{transaction.number * transaction.price}</td>
-				<td>@transaction.price</td>
-				<td>@transaction.capital</td>
+        <td>@{"%1.2f" format (transaction.number * transaction.price)}</td>
+				<td>@{"%1.2f" format transaction.price}</td>
+				<td>@{"%1.2f" format transaction.capital}</td>
       </tr>
 }
 </table>
@@ -105,7 +111,7 @@ You have <span class="red-em">no quotes</span>.
 </div>
 
 <div>
-  <h2>Mes Amis</h2>
+  <h2>My Friends</h2>
 </div>
 <div>
   <div>
@@ -125,20 +131,28 @@ You have <span class="red-em">no quotes</span>.
 		}
 	</div>
 </div>
+    <div>
+        <h2>My achievements</h2>
+        @user.achievements.toString
+    </div>
 </div>
 
-@if(!quotes_with_prices.isEmpty){
+
+
 <div id="right_col">
+
+@if(!quotes_with_prices.isEmpty){
   <div>
-    <h2>Mes Graphiques</h2>
+    <h2>Mes Graphs</h2>
     @for((name, number, quoteInfoHistory) <- quotes_with_prices if number > 0) {
       @quoteInfoHistory match {
-      case Some((quoteInfo, history)) => { <h3>@quoteInfo.name</h3>@chart(history) }
+      case Some((quoteInfo, history)) => { <h3>@quoteInfo.name - @quoteInfo.longName</h3>@chart(history) }
       case None => {}
       }
       }
   </div>
-</div>
 }
+</div>
+
 
 }

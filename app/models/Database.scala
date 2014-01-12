@@ -10,6 +10,7 @@ object Database {
 
     val counter = db("counter")
     val user = db("user")
+    val message = db("message")
 }
 
 // vim: set ts=4 sw=4 et:
