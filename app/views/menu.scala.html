@@ -12,10 +12,11 @@
       <a class="brand" href="@routes.Application.index">Yolo Stocks Game</a>
       <div class="nav-collapse collapse">
 
+        <ul class="nav navbar-nav">
+          <li><a href="@routes.Application.rules">Rules</a></li>
 				@request.session.get(Security.username) match {
 				case Some (u) =>{
-        <ul class="nav navbar-nav">
-          <li><a href="@routes.FinanceAPI.multipleQuotes">Quote</a></li>
+          <li><a href="@routes.FinanceAPI.multipleQuotes">Quotes</a></li>
           <li><a href="@routes.Friend.ranking">Rank</a></li>
 				</ul>
 
@@ -33,6 +34,7 @@
         </ul>
 				}
 				case None => {
+				</ul>
 
 				@helper.form(action = routes.Auth.login,
 				             'class -> "navbar-form pull-right"  ) {

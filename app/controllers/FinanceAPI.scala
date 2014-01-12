@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.deser.std.NumberDeserializers.IntegerDeser
 
 
 
-object FinanceAPI extends Controller {
+object FinanceAPI extends Controller with SecuredAsync {
 
 
   def rawMultipleQuotes(quotes : List[String]) : Future[List[QuoteInfo]] = {
@@ -30,7 +30,8 @@ object FinanceAPI extends Controller {
     }
   }
 
-  def multipleQuotes = Action.async { implicit request =>
+  def multipleQuotes = withAuth { email => implicit request =>
+
     val quotes = List("goog", "yhoo", "msft", "aapl", "aal", "adbe", "adsk",
       "ea", "ebay", "gilt", "has", "jack", "lmia", "mat", "mdci", "nflx", "optt",
       "qiwi", "regi", "scvl", "thff", "thld", "tivo", "useg", "via", "volc", "vrsn",
@@ -45,7 +46,7 @@ object FinanceAPI extends Controller {
     }
   }
 
-  def currency(from: String, to: String) = Action.async { implicit request =>
+  def currency(from: String, to: String) = withAuth { email => implicit request =>
     val resp = models.Currency.request(from, to)
     resp.map { response =>
       val (id, rate) = models.Currency.parseResponse(response)
@@ -65,7 +66,7 @@ object FinanceAPI extends Controller {
     }
   }
 
-  def quote(name: String) = Action.async { implicit request =>
+  def quote(name: String) = withAuth { email => implicit request =>
     rawQuote(name).map {
       case Some(quoteInfo) => Ok(views.html.quote(quoteInfo, Nil))
       case None => 
@@ -78,7 +79,7 @@ object FinanceAPI extends Controller {
     }
   }
 
-  def history(name: String) = Action.async { implicit request =>
+  def history(name: String) = withAuth { email => implicit request =>
     val resp = models.Historic.request(name)
     resp.map { response =>
       try {

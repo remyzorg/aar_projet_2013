@@ -26,18 +26,16 @@ achievements : Iterable[Option[Achievement]])(implicit request : Request[Any])
 
 
 @if(quotes_with_prices.isEmpty){
-<div id="left_col">
-You have <span class="red-em">no quotes</span>.
-<br/>
-<br/>
-<p><a href="@routes.FinanceAPI.multipleQuotes"
+<div id="left_col" class="well">
+		<h2>My Stocks : </h2>
+<p><a href="@routes.Application.rules"
       class="btn btn-primary btn-large">
-    Start trading &raquo;</a></p>
+    Read the rules before &raquo;</a> </p>
 </div>
 }
 
 @if(!quotes_with_prices.isEmpty){
-<div id="left_col">
+<div id="left_col" class="well">
   <div>
 		
 		<h2>My Stocks : </h2>
@@ -108,45 +106,66 @@ You have <span class="red-em">no quotes</span>.
       </tr>
 }
 </table>
+</div>
 }
 
-</div>
 
-<div>
-  <h2>My Friends</h2>
-</div>
-<div>
-  <div>
-		@if(user.friends.isEmpty){
+<div class="row">
+  <div class="span4">
 
-		<p><a href="@routes.Friend.addFriend"
-					class="btn btn-primary btn-large">
-				Add friends &raquo;</a></p>
-		} else {
+		<div class="well">
+			<div>
+				<h2>My Friends</h2>
+			</div>
+			<div>
+				<div>
+					@if(user.friends.isEmpty){
 
-		<div class="list-group">
-		@for(f <- user.friends){
-		<a class="list-group-item" href="@routes.Friend.profile(f)"> @f </a>
-	   }
+					<p><a href="@routes.Friend.addFriend"
+								class="btn btn-primary btn-large">
+							Add friends &raquo;</a></p>
+					} else {
+
+					<div class="list-group">
+						@for(f <- user.friends){
+											<a class="list-group-item" href="@routes.Friend.profile(f)"> @f </a>
+											}
+					</div>
+
+					}
+				</div>
+			</div>
 		</div>
 
-		}
 	</div>
+  <div class="span8">
+
+  @if(!achievements.isEmpty){
+<div class="well">
+<div>
+  <div>
+    <h2>My Achievements</h2>
+		<table class="table">
+    @for(ach <- achievements) {
+								@ach match {
+								case Some(ach) => {
+			<tr class="success"><td>
+					<span class="green-em">@ach.name</span>
+				</td><td>@ach.desc</td></tr>
+				}
+      case None => {}
+          }
+			<table>
+      }
     </div>
-    <div>
-        @if(!achievements.isEmpty){
-        <div>
-            <h2>My Achievements</h2>
-            @for(ach <- achievements) {
-            @ach match {
-            case Some(ach) => { <h3>@ach.name</h3>@ach.desc }
-            case None => {}
-            }
-            }
-        </div>
-        }
-    </div>
+  </div>
+    }
+
+	</div>
 </div>
+
+
+
 
 
 

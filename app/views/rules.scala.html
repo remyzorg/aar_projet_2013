@@ -1,0 +1,71 @@
+@()(implicit request : Request[Any])
+
+
+@header_main("Yolo Stocks Game - Rules") {
+    <link href="@routes.Assets.at("stylesheets/rules.css")"
+        rel="stylesheet" />
+} {
+<div id="main-yolo" class="container">
+
+
+    <div class="hero-unit first-hero">
+        <div class="container">
+					  <h1>Rules</h1>
+					
+					
+            <h3>Basical Rules</h3>
+
+            <ul>
+                <li>Only 2 actions
+                : <span class="red-em">Buy</span>
+									and <span class="red-em">Sell</span> </li>
+
+                <li>Your capital is <span class="red-em">not real
+                money</span>.
+								</li>
+								
+                <li>Your capital cannot go under 1000 and you cannot
+                buy anymore if it's under 0</li>
+
+								<li>Be careful, some quotes are not always availables
+								for selling</li>
+
+								
+            </ul>
+
+						
+            <h3>Features</h3>
+
+            <ul>
+                <li>Add friends (you must know the user name)</li>
+
+                <li>Read informations about your quotes on your
+                homepage (graphs, history, ...)</li>
+								
+                <li>Obtain achievments and improve your score by
+                buying or selling</li>
+								
+            </ul>
+
+						@request.session.get(Security.username) match {
+						case None => {
+						<p><a href="@routes.Signup.setup"
+									class="btn btn-primary btn-large">
+								Start trading &raquo;</a></p>
+						}
+
+						case Some (_) => {
+						<p><a href="@routes.FinanceAPI.multipleQuotes"
+									class="btn btn-primary btn-large">
+								Start trading &raquo;</a></p>
+						}
+						}
+
+        </div>
+    </div>
+
+	
+
+	
+</div>
+}

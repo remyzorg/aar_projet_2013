@@ -5,6 +5,7 @@
 # Home page
 GET     /                           controllers.Application.index
 GET     /home                       controllers.Application.indexAuth
+GET     /rules                      controllers.Application.rules
 
 # Sign in/up and edit profil pages
 

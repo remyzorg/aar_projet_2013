@@ -1,3 +1,4 @@
+
 #content {
     max-width: 1100px;
     min-width: 800px;
@@ -43,18 +44,6 @@
     color: darkgray;
 }
 
-.first-hero {
-    color: white;
-    height: 200px;
-    /* http://www.flickr.com/photos/19942094@N00/4439135157/sizes/l/ */
-    background-image: url(/assets/images/4439135157_7ebbc4f81d_b.jpg);
-}
-
-.second-hero {
-    /* http://www.flickr.com/photos/papalars/2451592976/sizes/l/ */
-    background-image: url(/assets/images/2451592976_66ac1b9586_b.jpg);
-}
-
 .second-hero .container {
     color: black;
     max-width: 100%;
@@ -64,9 +53,4 @@
 .red-em {
     font-weight: bold;
     color: red;
-}
-
-.green-em {
-    font-weight: bold;
-    color: green;
 }

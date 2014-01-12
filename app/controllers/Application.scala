@@ -18,6 +18,10 @@ object Application extends Controller with SecuredAsync {
     }
   }
 
+  def rules = Action { implicit request =>
+    Ok(views.html.rules())
+  }
+
   def indexAuth = withUser { user_data => implicit request =>
     Future.traverse(user_data.quotes) {
       case (quote, quantity) => for {

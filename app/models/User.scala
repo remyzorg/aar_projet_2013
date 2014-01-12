@@ -3,6 +3,10 @@ package models
 import org.bson.types.ObjectId
 import com.mongodb.casbah.Imports._
 import scala.language.reflectiveCalls
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormatter
+import org.joda.time.format.DateTimeFormat
+
 
 case class User (
   id : ObjectId,
@@ -22,7 +26,8 @@ case class TransactionObject (
   quote : String,
   price : Double,
   number : Int,
-  capital : Double
+  capital : Double,
+  date : String
 )
 
 class UserNotFound(user: String) extends RuntimeException(user)
@@ -46,6 +51,7 @@ object UserModel {
   val quote = "quote"
   val price = "price"
   val number = "number"
+  val date = "date"
 
   def toTransaction(obj: DBObject) = 
     TransactionObject (
@@ -55,7 +61,8 @@ object UserModel {
       obj.getAs[String](quote).get,
       obj.getAs[Double](price).get,
       obj.getAs[Int](number).get,
-      obj.getAs[Double](capital).get
+      obj.getAs[Double](capital).get,
+      obj.getAs[String](date).get
     )
 
   def createTransactionObject(tr : TransactionObject) =
@@ -67,7 +74,8 @@ object UserModel {
       quote -> tr.quote,
       price -> tr.price,
       number -> tr.number,
-      capital -> tr.capital
+      capital -> tr.capital,
+      date -> tr.date
     )
 
   def createTransactionList(tr : List[TransactionObject]) = {
@@ -277,7 +285,8 @@ object UserModel {
       case None => 0.0
     }
 
-    val transaction = TransactionObject(action, from, price, number, capitalVal)
+    val transaction = TransactionObject(
+      action, from, price, number, capitalVal, DateTime.now.toString)
 
     obj match {
       case Some(obj) =>
