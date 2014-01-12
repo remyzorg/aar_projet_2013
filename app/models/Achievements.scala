@@ -34,9 +34,12 @@ object Achievements {
     Achievement(13, "Begin to sell", "Thousandth sell, impressive, welcome to the beginning of trading.")
   val allNight =
     Achievement(14, "All nighter", "You're trading buy night, indeed, stocks won't trade by themselves.")
+  val special = 
+    Achievement(15, "First!", "Because you were here before anyone else, thanks for watching!")
 
   val achievements = signup :: firstBuy :: firstSell :: lostMoney :: smallGain :: goodGain :: doubleGain :: riskyInvestments ::
-    tenthBuy :: hundredthBuy :: thousandBuy :: tenthSell :: hundredthSell :: thousandSell :: allNight :: Nil
+    tenthBuy :: hundredthBuy :: thousandBuy :: tenthSell :: hundredthSell ::
+    thousandSell :: allNight :: special :: Nil
 
   def toAchievement(id: Int) =
     achievements.find {ach => ach.id == id}

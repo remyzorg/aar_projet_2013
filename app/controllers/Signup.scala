@@ -55,6 +55,7 @@ object Signup extends Controller {
         UserModel.create (user, password);
 
         AchievementsUnlocker.unlockSignup(user);
+        AchievementsUnlocker.unlockSpecial(user);
 
         Redirect(routes.Application.index)
           .withSession(Security.username -> email)
