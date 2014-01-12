@@ -4,6 +4,7 @@
 
 # Home page
 GET     /                           controllers.Application.index
+GET     /home                       controllers.Application.indexAuth
 
 # Sign in/up and edit profil pages
 
@@ -17,10 +18,13 @@ GET     /logout                     controllers.Auth.logout
 GET     /account/edit               controllers.EditAccount.setup
 POST    /account/edit               controllers.EditAccount.edit
 
-# Add and remove friend
+# friends
 
 GET     /friend/add                 controllers.Friend.addFriend
 POST    /friend/add                 controllers.Friend.addFriendPost
+
+GET 		/friend/:username						controllers.Friend.profile(username:String)
+
 
 # API to call the Yahoo finance API
 GET     /quotes                     controllers.FinanceAPI.multipleQuotes

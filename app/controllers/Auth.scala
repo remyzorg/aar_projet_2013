@@ -50,6 +50,15 @@ object Auth extends Controller {
   }
 
 
+  def isAuth (implicit request: RequestHeader) = {
+    session.get(Security.username) match {
+      case None => false
+      case Some (_) => true
+    }
+
+  }
+
+
 }
 
 

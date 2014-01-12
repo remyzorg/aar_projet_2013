@@ -48,4 +48,20 @@ object Friend extends Controller with Secured {
     )
   }
 
+
+  def profile(targetUsername: String) =
+    withUser { user => implicit request =>
+
+      if (user.friends.contains(targetUsername)){
+        Ok(views.html.friend_profile(targetUsername))
+      }
+      else
+        Redirect(routes.Friend.addFriend)
+
+
+
+  }
+
+
+
 }

@@ -1,0 +1,58 @@
+@(friendname: String)(implicit request : Request[Any])
+
+
+@header_main("Yolo Stocks Game - " + friendname + " profile") {
+<link href="@routes.Assets.at("stylesheets/home.css")"
+      rel="stylesheet" />
+} {
+
+<div id="login-yolo" class="container">
+
+	<p>
+		@UserModel.findByUsername(friendname) match {
+		case Some(friend) => {
+
+		<h1>@friend.username's profile</h2>
+
+<div id="top_panel">
+  <div class="score_panel">
+    <h2>Score : <span class="score">@friend.score</span> </h2>
+  </div>
+</div>
+
+
+@if(!friend.quotes.isEmpty){
+<div id="left_col">
+  <div>
+		
+
+		<h2>Ses Actions : </h2>
+		<table class="table table-hover">
+			<tr>
+				<th>Quant.</th>
+				<th>Action</th>
+			</tr>
+			@for((name, number) <- friend.quotes) {
+				<tr>
+					<td><span class="quote_name">@name</span></td>
+					<td><span class="quote_number">
+							<a href="quote/@name">@number</a></span></td>
+				</tr>
+				}
+		</table>
+
+		
+</div>
+<div>
+	}
+
+
+}
+
+case None => { }
+}
+</p>
+
+</div>
+
+}

@@ -2,92 +2,129 @@
 
 
 @header_main("Yolo - Home") {
-    <link href="@routes.Assets.at("stylesheets/home.css")"
-        rel="stylesheet" />
+<link href="@routes.Assets.at("stylesheets/home.css")"
+      rel="stylesheet" />
 } {
-    <div id="top_panel">
-        <div class="score_panel">
-            <h2>Score : <span class="score">@user.score</span> </h2>
-        </div>
-        <div class="capital_panel">
-            <h2>Capital : <span class="capital">@{"%1.2f" format user.capital}</span> </h2>
-        </div>
-    </div>
-    <div id="left_col">
-        <div>
-            <h2>Mes Actions : </h2>
-            <table class="table table-hover">
-                <tr>
-                    <th>Quant.</th>
-                    <th>Action</th>
-                    <th>Valeur</th>
-                    <th>Changement</th>
-                </tr>
-                @for((name, number, quoteInfo) <- quotes_with_prices if number > 0) {
-                    <tr>
-                        <td><span class="quote_number">@number</span></td>
-                        <td><span class="quote_name"><a href="quote/@name">@name</a></span></td>
-                        @quoteInfo match {
-                           case Some((quoteInfo, history)) => {
-                                @quoteInfo.bidRealtime match {
-                                  case Some(price) => {
-                                    <td> @{"%1.2f" format (price * number)} (@{"%1.2f" format price} unit.)</td>
-                                    <td>@quoteInfo.changePercentage</td>
-                                  }
-                                  case None => { <td>Indispo</td> <td>Indispo</td> }
-                                }
-                           }
-                           case None => { <td>Indispo</td> <td>Indispo</td> }
-                        }
-                    </tr>
-                }
-            </table>
-            <span>Total des valeurs disponibles :
-                @defining(quotes_with_prices.foldLeft(0.0){
-                    case (acc, (_, quantity, Some((quoteInfo, history)))) => {
-                      quoteInfo.bidRealtime match {
-                        case Some(price) => acc + quantity * price
-                        case None => acc
-                      }
-                    }
-                    case (acc, (_, quantity, None)) => acc }
-                ){total =>
-                    <span class="total">@{"%1.2f" format total}</span>
-                    (avec capital : <span class="totalcapital">@{"%1.2f" format total + user.capital}</span>)
-                }
-            </span>
-        </div>
-        <div>
-            <h2>Mes Transactions</h2>
-            <ul>
-                @for(transaction <- user.transactions.reverse) {
-                <li>
-                    @transaction.action match {
-                    case BuyAction => { <span class="buy">Achat</span> }
-                    case SellAction => { <span class="sell">Vente</span> }
-                    case _ => { @transaction.action }
-                    }
-                    : @transaction.number <a href="quote/@transaction.quote">@transaction.quote</a> pour
-                    @{transaction.number * transaction.price} (prix unit. @transaction.price) ; @transaction.capital </li>
-                }
-        </div>
-        <div>
-            <h2>Mes Amis</h2>
-        </div>
-        <div>
-            <div>3 Valeurs potentielles</div>
-        </div>
-    </div>
-    <div id="right_col">
-        <div>
-            <h2>Mes Graphiques</h2>
-            @for((name, number, quoteInfoHistory) <- quotes_with_prices if number > 0) {
-                @quoteInfoHistory match {
-                    case Some((quoteInfo, history)) => { <h3>@quoteInfo.name</h3>@chart(history) }
-                    case None => {}
-                }
-            }
-        </div>
-    </div>
+<div id="top_panel">
+  <div class="score_panel">
+    <h2>Score : <span class="score">@user.score</span> </h2>
+  </div>
+  <div class="capital_panel">
+    <h2>Capital : <span class="capital">@{"%1.2f" format user.capital}</span> </h2>
+  </div>
+</div>
+
+
+
+@if(quotes_with_prices.isEmpty){
+
+You have <span class="red-em">no quotes</span>.
+<br/>
+<br/>
+<p><a href="@routes.FinanceAPI.multipleQuotes"
+      class="btn btn-primary btn-large">
+    Start trading &raquo;</a></p>
+}
+
+@if(!quotes_with_prices.isEmpty){
+<div id="left_col">
+  <div>
+		
+		<h2>Mes Actions : </h2>
+		<table class="table table-hover">
+			<tr>
+				<th>Quant.</th>
+				<th>Action</th>
+				<th>Valeur</th>
+				<th>Changement</th>
+			</tr>
+			@for((name, number, quoteInfo) <- quotes_with_prices if number > 0) {
+				<tr>
+					<td><span class="quote_number">@number</span></td>
+					<td><span class="quote_name"><a href="quote/@name">@name</a></span></td>
+					@quoteInfo match {
+					case Some((quoteInfo, history)) => {
+					@quoteInfo.bidRealtime match {
+					case Some(price) => {
+					<td> @{"%1.2f" format (price * number)} (@{"%1.2f" format price} unit.)</td>
+					<td>@quoteInfo.changePercentage</td>
+					}
+					case None => { <td>Indispo</td> <td>Indispo</td> }
+					}
+					}
+					case None => { <td>Indispo</td> <td>Indispo</td> }
+					}
+				</tr>
+				}
+		</table>
+		<span>Total des valeurs disponibles :
+			@defining(quotes_with_prices.foldLeft(0.0){
+			case (acc, (_, quantity, Some((quoteInfo, history)))) => {
+			quoteInfo.bidRealtime match {
+			case Some(price) => acc + quantity * price
+			case None => acc
+			}
+			}
+			case (acc, (_, quantity, None)) => acc }
+			){total =>
+			<span class="total">@{"%1.2f" format total}</span>
+			(avec capital : <span class="totalcapital">@{"%1.2f" format total + user.capital}</span>)
+			}
+		</span>
+  </div>
+  <div>
+    <h2>Mes Transactions</h2>
+    <ul>
+      @for(transaction <- user.transactions.reverse) {
+													<li>
+														@transaction.action match {
+														case BuyAction => { <span class="buy">Achat</span> }
+        case SellAction => { <span class="sell">Vente</span> }
+        case _ => { @transaction.action }
+        }
+        : @transaction.number <a href="quote/@transaction.quote">@transaction.quote</a> pour
+        @{transaction.number * transaction.price} (prix unit. @transaction.price) ; @transaction.capital </li>
+}
+</ul>
+</div>
+}
+
+
+<div>
+  <h2>Mes Amis</h2>
+</div>
+<div>
+  <div>
+		@if(user.friends.isEmpty){
+
+		<p><a href="@routes.Friend.addFriend"
+					class="btn btn-primary btn-large">
+				Add friends &raquo;</a></p>
+		} else {
+
+		<div class="list-group">
+		@for(f <- user.friends){
+		<a class="list-group-item" href="@routes.Friend.profile(f)"> @f </a>
+	   }
+		</div>
+
+		}
+	</div>
+</div>
+
+
+@if(!quotes_with_prices.isEmpty){
+<div id="right_col">
+  <div>
+    <h2>Mes Graphiques</h2>
+    @for((name, number, quoteInfoHistory) <- quotes_with_prices if number > 0) {
+      @quoteInfoHistory match {
+      case Some((quoteInfo, history)) => { <h3>@quoteInfo.name</h3>@chart(history) }
+      case None => {}
+      }
+      }
+  </div>
+</div>
+}
 
 }
