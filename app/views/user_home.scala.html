@@ -26,13 +26,14 @@ achievements : Iterable[Option[Achievement]])(implicit request : Request[Any])
 
 
 @if(quotes_with_prices.isEmpty){
-
+<div id="left_col">
 You have <span class="red-em">no quotes</span>.
 <br/>
 <br/>
 <p><a href="@routes.FinanceAPI.multipleQuotes"
       class="btn btn-primary btn-large">
     Start trading &raquo;</a></p>
+</div>
 }
 
 @if(!quotes_with_prices.isEmpty){

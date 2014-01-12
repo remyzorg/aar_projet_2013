@@ -1,10 +1,10 @@
-@(from: String, number: Int, price: String, oldScore: Int, earned: Int)(implicit request : Request[Any])
+@(from: String, number: Int, price: String, score: Int, earned: Int)(implicit request : Request[Any])
 
 @main("Buying"){
 <p class="container">
 You've bought @number stocks from @from, at a unary price of @price. <br />
 
 You earned @earned points by taking risk (or not), taking your score to
-@(oldScore + earned)
+@(score)
 </p>
 }

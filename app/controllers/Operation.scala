@@ -19,37 +19,42 @@ object Operation extends Controller with SecuredAsync {
     val resp = Quote.request(fromUpper)
 
     resp.map { response =>
-      val result = Quote.parseResponse(response)
-      val quoteInfo = Quote.getQuoteInfo(result)
+      try {
+        val result = Quote.parseResponse(response)
+        val quoteInfo = Quote.getQuoteInfo(result)
+      
+        val (price, operation) =
+          if (action == Transaction.BUY_ACTION)
+            (quoteInfo.askRealtime, Transaction.buy _)
+          else (quoteInfo.bidRealtime, Transaction.sell _)
 
-      val (price, operation) =
-        if (action == Transaction.BUY_ACTION)
-          (quoteInfo.askRealtime, Transaction.buy _)
-        else (quoteInfo.bidRealtime, Transaction.sell _)
+        val tradePrice = quoteInfo.lastTradePrice match {
+          case Some(v) => v
+          case None => 0.0
+        }
 
-      val tradePrice = quoteInfo.lastTradePrice match {
-        case Some(v) => v
-        case None => 0.0
-      }
-
-      price match {
-        case Some(price) =>
-          {
-            try {
-              val (earned, oldScore) = operation(mail, fromUpper, price, number, tradePrice)
-              if (action == Transaction.BUY_ACTION)
-                Ok(views.html.buy(fromUpper, number, price.toString, oldScore, earned))
-              else Ok(views.html.sell(fromUpper, number, price.toString, oldScore, earned))
+        price match {
+          case Some(price) =>
+            {
+              try {
+                val (earned, oldScore) = operation(mail, fromUpper, price, number, tradePrice)
+                if (action == Transaction.BUY_ACTION)
+                  Ok(views.html.buy(fromUpper, number, price.toString, oldScore, earned))
+                else Ok(views.html.sell(fromUpper, number, price.toString, oldScore, earned))
+              }
+              catch {
+                case e: TransactionException =>
+                  Ok(e.getMessage)
+                case e: TransactionNotConnected => onUnauthorized(request)
+                case e: JsResultException =>
+                  BadRequest(views.html.error(e.getMessage))
+              }
             }
-            catch {
-              case e: TransactionException =>
-                Ok(e.getMessage)
-              case e: TransactionNotConnected => onUnauthorized(request)
-              case e: JsResultException =>
-                BadRequest(views.html.error(e.getMessage))
-            }
-          }
-        case None =>
+          case None =>
+            BadRequest(views.html.error("The price for this action is unavailable"))
+        }
+      } catch {
+        case e: JsResultException => 
           BadRequest(views.html.error("The price for this action is unavailable"))
       }
     }

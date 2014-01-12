@@ -33,7 +33,7 @@ object AchievementsUnlocker {
   def unlockLotOfBuys(user: User) = {
     val buyNumber = user.transactions.foldLeft(0) {
       case (acc, transaction) => transaction.action match {
-        case BuyAction => acc + 1
+        case BuyAction => acc + transaction.number
         case _ => acc
       }
     }
@@ -52,7 +52,7 @@ object AchievementsUnlocker {
   def unlockLotOfSells(user : User) = {
     val sellNumber = user.transactions.foldLeft(0) {
       case (acc, transaction) => transaction.action match {
-        case SellAction => acc + 1
+        case SellAction => acc + transaction.number
         case _ => acc
       }
     }
