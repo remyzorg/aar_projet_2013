@@ -23,7 +23,7 @@ object AchievementsUnlocker {
     }
   }
 
-  def unlockSpecial(user : user) = simplyUnlockAchievement(user, Achievements.special)
+  def unlockSpecial(user : User) = simplyUnlockAchievement(user, Achievements.special)
   def unlockFirstBuy(user : User) = simplyUnlockAchievement(user, Achievements.firstBuy)
   def unlockFirstSell(user : User) = simplyUnlockAchievement(user, Achievements.firstSell)
   def unlockRiskyInvestments(user: User, rawScore: Int) =
