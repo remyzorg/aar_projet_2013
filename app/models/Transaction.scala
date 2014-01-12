@@ -74,9 +74,6 @@ object Transaction {
     UserModel.opQuoteByCompany(email, from, number, (_-_))
     UserModel.opTransaction(email, SellAction, from, price, number)
 
-    AchievementsUnlocker.unlockFirstSell(user)
-    AchievementsUnlocker.unlockLotOfSells(user)
-
     val (rawScore, earned, score) = Scoring.updateScoreSell(user, from, price, number, tradePrice)
 
     AchievementsUnlocker.unlockFirstSell(user)

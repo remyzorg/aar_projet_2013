@@ -31,18 +31,27 @@ object Debug extends Controller with Secured{
         "current: " + current)
     }
 
-  def opTransaction (from: String, price: Double, number: Int, action: OpAction) = 
-    withuser { user => implicit request =>
-      val fromUpper = from.toUpper
+  def opTransaction (from: String, price: Double, number: Int, action: String) = 
+    withUser { user => implicit request =>
+      val fromUpper = from.toUpperCase
       val (tradePrice, operation) =
         action match {
-          case act: SellAction =>
+          case "sell" =>
             (price * 0.97, Transaction.sell _)
-          case act: BuyAction =>
+          case "buy" =>
             (price * 1.03, Transaction.buy _)
         }
 
-      operation(user.email, fromUpper, price, number, tradePrice)
+      val (earned, score) = 
+        operation(user.email, fromUpper, price, number, tradePrice)
+      Ok("Added the following transaction:\n"
+        + "quote: " + from + "\n"
+        + "price: " + price + "\n"
+        + "number: " + number + "\n"
+        + "tradePrice: " + tradePrice + "\n"
+        + "action: " + action + "\n"
+        + "Resulting in " + earned + " points, giving a total of "
+        + score + " point")
   }
 
 
