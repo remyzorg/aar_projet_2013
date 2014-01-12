@@ -12,7 +12,8 @@ case class User (
   quotes : Map[String, Int],
   transactions : List[TransactionObject],
   score : Int,
-  friends : List[String]
+  friends : List[String],
+  achievements : List[Int]
 )
 
 case class TransactionObject (
@@ -39,6 +40,7 @@ object UserModel {
   val transactions = "transactions"
   val score = "score"
   val friends = "friends"
+  val achievements = "achievements"
   
   val action = "action"
   val quote = "quote"
@@ -103,6 +105,13 @@ object UserModel {
           // { obj => obj.getAs[String].get }
         }
         case None => Nil
+      },
+      obj.getAs[MongoDBList](achievements) match {
+        case Some (m : MongoDBList) => {
+          m.toList.asInstanceOf[List[Int]]// .map 
+          // { obj => obj.getAs[String].get }
+        }
+        case None => Nil
       }
     )
 
@@ -119,7 +128,8 @@ object UserModel {
         quotes -> user.quotes.asDBObject,
         transactions -> createTransactionList(user.transactions),
         score -> user.score,
-        friends -> user.friends
+        friends -> user.friends,
+        achievements -> user.achievements
       )
     Database.user.save(obj)
   }
@@ -285,6 +295,18 @@ object UserModel {
       case Some(obj) =>
         Database.user.update(target,
           $set(score -> newScore))
+      case None => ()
+    }
+  }
+
+  def addAchievement(targetEmail: String, achievement: Achievement) = {
+    val target = MongoDBObject(email -> targetEmail)
+    val obj = Database.user.findOne(target)
+
+    obj match {
+      case Some(obj) =>
+        Database.user.update(target,
+          $push(achievements -> achievement.id))
       case None => ()
     }
   }

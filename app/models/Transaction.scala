@@ -41,7 +41,12 @@ object Transaction {
     UserModel.opQuoteByCompany(email, from, number, (_+_))
     UserModel.opTransaction(email, BuyAction, from, price, number)
 
-    Scoring.updateScoreBuy(user, from, price, number, tradePrice)
+    if (!(user.achievements.exists {achId => achId == Achievements.firstBuy}))
+      UserModel.addAchievement(email, Achievements.firstBuy)
+
+    val (rawScore, earned, score) = Scoring.updateScoreBuy(user, from, price, number, tradePrice)
+
+    (earned, score)
   }
 
 
@@ -65,7 +70,10 @@ object Transaction {
     UserModel.opQuoteByCompany(email, from, number, (_-_))
     UserModel.opTransaction(email, SellAction, from, price, number)
 
-    Scoring.updateScoreSell(user, from, price, number, tradePrice)
+    val (rawScore, earned, score) = Scoring.updateScoreSell(user, from, price, number, tradePrice)
+
+    // if (rawScore < 0) 
+    (earned, score)
   }
 
 }

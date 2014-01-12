@@ -43,26 +43,26 @@ object Scoring {
   }
 
   def updateScoreSell(user: User, from: String, price: Double, number: Int,
-    tradePrice: Double):
-    (Int, Int) = {
+    tradePrice: Double) : (Int, Int, Int) = {
     val transaction = UserModel.getLastTransactionFrom(user, from, Transaction.BUY_ACTION)
 
     transaction match {
       case Some(tr) =>
-        val score = transactionValue(price, tr) * number
+        val rawScore = transactionValue(price, tr)
+        val score = rawScore * number
         UserModel.opScore(user.email, user.score + score)
-        (score, user.score)
-      case None => (0, user.score)
+        (rawScore, score, user.score)
+      case None => (0, 0, user.score)
     }
   }
 
 
   def updateScoreBuy(user: User, from: String, price: Double, number: Int,
-    tradePrice: Double):
-    (Int, Int) = {
-    val score = riskValue(price, from) * number
+    tradePrice: Double): (Int, Int, Int) = {
+    val rawScore = riskValue(price, from)
+    val score = rawScore * number
     UserModel.opScore(user.email, user.score + score)
-    (score, user.score)
+    (rawScore, score, user.score)
   }
 
   def ranking(user : User): List[RankingInfo] = {
