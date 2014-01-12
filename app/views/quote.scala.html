@@ -2,7 +2,7 @@
 
 @main("Yolo - Quote prices for " + quoteInfo.name) {
 <div class="container">
-    <h2>@quoteInfo.name - @quoteInfo.bidRealtime
+    <h2>@quoteInfo.name - @quoteInfo.lastTradePrice
         <!-- Large button group -->
         @quoteInfo.askRealtime match {
           case Some(price) => {

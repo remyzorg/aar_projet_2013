@@ -25,7 +25,7 @@ object Transaction {
       case BuyAction => "buy"
     }
 
-  def buy(email : String, from: String, price: Double, number: Int) = {
+  def buy(email : String, from: String, price: Double, number: Int, tradePrice: Double) = {
     
     val money : Double = price * number
     println(money + " " + price + " " + number)
@@ -40,10 +40,13 @@ object Transaction {
     UserModel.opCapital(email, money, (_-_))
     UserModel.opQuoteByCompany(email, from, number, (_+_))
     UserModel.opTransaction(email, BuyAction, from, price, number)
+
+    Scoring.updateScoreBuy(user, from, price, number, tradePrice)
   }
 
 
-  def sell(email : String, from: String, price: Double, number: Int) = {
+  def sell(email : String, from: String, price: Double, number: Int, tradePrice:
+      Double) = {
     val money = price * number
 
     val user = UserModel.findByEmail(email) match {
@@ -62,7 +65,7 @@ object Transaction {
     UserModel.opQuoteByCompany(email, from, number, (_-_))
     UserModel.opTransaction(email, SellAction, from, price, number)
 
-    Scoring.updateScore(user, from, price, number)
+    Scoring.updateScoreSell(user, from, price, number, tradePrice)
   }
 
 }

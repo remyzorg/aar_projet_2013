@@ -61,6 +61,12 @@ object Quote extends Finance {
     catch {
       case e: JsResultException => None
     },
+    try { val bid = getValue(value, "LastTradePriceOnly").as[String].toDouble
+      if (bid == 0.0) None else Some(bid)
+    }
+    catch {
+      case e: JsResultException => None
+    },
     getValue(value, "Change_PercentChange").as[String],
     getValue(value, "ChangeRealtime").as[String].toDouble,
     getValue(value, "DaysLow").as[String].toDouble,

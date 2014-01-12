@@ -1,5 +1,9 @@
 package models
 
+import scala.concurrent._
+import scala.concurrent.duration._
+
+
 case class RankingInfo(username: String, capital: Double, score: Int)
 
 object Scoring {
@@ -17,15 +21,48 @@ object Scoring {
     if (diff < 0) -score else score
   }
 
-  def updateScore(user: User, from: String, price: Double, number: Int) {
+  def riskValue(tradePrice: Double, from: String): Int = {
+    val req = Historic.request(from)
+    try {
+      val result = Await result(req, 3 seconds)
+      val history = Historic.parseResponse(result)
+      val sum = history.map({value => value._2}).sum
+      val mean = sum / history.length
+
+      val diff = tradePrice - mean
+      val percent = (Math.abs(diff) / mean) * 100
+      val score = 
+        if (percent < 5) 0
+        else if (percent < 15) 2
+        else 4
+
+      if (diff > 0) score else 0 //No risk since it is lower than usual
+    } catch {
+      case e: Throwable => 0
+    }
+  }
+
+  def updateScoreSell(user: User, from: String, price: Double, number: Int,
+    tradePrice: Double):
+    (Int, Int) = {
     val transaction = UserModel.getLastTransactionFrom(user, from, Transaction.BUY_ACTION)
 
     transaction match {
       case Some(tr) =>
         val score = transactionValue(price, tr) * number
         UserModel.opScore(user.email, user.score + score)
-      case None => ()
+        (score, user.score)
+      case None => (0, user.score)
     }
+  }
+
+
+  def updateScoreBuy(user: User, from: String, price: Double, number: Int,
+    tradePrice: Double):
+    (Int, Int) = {
+    val score = riskValue(price, from) * number
+    UserModel.opScore(user.email, user.score + score)
+    (score, user.score)
   }
 
   def ranking(user : User): List[RankingInfo] = {

@@ -27,14 +27,19 @@ object Operation extends Controller with SecuredAsync {
           (quoteInfo.askRealtime, Transaction.buy _)
         else (quoteInfo.bidRealtime, Transaction.sell _)
 
+      val tradePrice = quoteInfo.lastTradePrice match {
+        case Some(v) => v
+        case None => 0.0
+      }
+
       price match {
         case Some(price) =>
           {
             try {
-              operation(mail, fromUpper, price, number)
+              val (earned, oldScore) = operation(mail, fromUpper, price, number, tradePrice)
               if (action == Transaction.BUY_ACTION)
-                Ok(views.html.buy(fromUpper, number, price.toString))
-              else Ok(views.html.sell(fromUpper, number, price.toString))
+                Ok(views.html.buy(fromUpper, number, price.toString, oldScore, earned))
+              else Ok(views.html.sell(fromUpper, number, price.toString, oldScore, earned))
             }
             catch {
               case e: TransactionException =>

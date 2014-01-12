@@ -15,6 +15,7 @@ case class QuoteInfo (
   bid : Option[Double],
   askRealtime : Option[Double],
   bidRealtime : Option[Double],
+  lastTradePrice : Option[Double],
   changePercentage : String,
   change: Double,
   daysLow : Double,
