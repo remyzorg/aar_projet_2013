@@ -57,11 +57,10 @@ object Friend extends Controller with Secured {
       }
       else
         Redirect(routes.Friend.addFriend)
-
-
-
   }
 
-
+  def ranking = withUser { user => implicit request =>
+    Ok(views.html.ranking(Scoring.ranking(user)))
+  }
 
 }

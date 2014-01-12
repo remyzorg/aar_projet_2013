@@ -1,0 +1,14 @@
+@(rank: List[RankingInfo])(implicit request : Request[Any])
+
+@header_main("Yolo Stocks Game - Ranking") {
+<link href="@routes.Assets.at("stylesheets/home.css")"
+      rel="stylesheet" />
+} {
+<div class="container">
+  <ul>
+    @for(r <- rank) {
+      <li> @r.username: @r.capital, @r.score </li>
+    }
+  </ul>
+</div>
+}

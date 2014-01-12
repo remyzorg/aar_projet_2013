@@ -1,9 +1,10 @@
 package models
 
+case class RankingInfo(username: String, capital: Double, score: Int)
+
 object Scoring {
 
   def transactionValue(price: Double, transaction: TransactionObject) = {
-
   
     val diff = price - transaction.price
     val percent = (Math.abs(diff) / transaction.price) * 100
@@ -22,14 +23,25 @@ object Scoring {
     transaction match {
       case Some(tr) =>
         val score = transactionValue(price, tr) * number
-        val prevScore = try {
-          user.score
-        } catch {
-          case e => 0
-        }
-        UserModel.opScore(user.email, prevScore + score)
+        UserModel.opScore(user.email, user.score + score)
       case None => ()
     }
+  }
+
+  def ranking(user : User): List[RankingInfo] = {
+    val friends = user.friends.map {
+      username =>
+      val friend = UserModel.findByUsername(username)
+      friend match {
+        case Some(friend) =>
+          RankingInfo(friend.username, friend.capital, friend.score)
+        case None => throw new UserNotFound(username)
+      }
+    }
+
+    val users: List[RankingInfo] = RankingInfo(user.username, user.capital, user.score) :: friends
+
+    users.sortBy({ user => user.score }).reverse
   }
 
 }
