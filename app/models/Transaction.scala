@@ -41,10 +41,13 @@ object Transaction {
     UserModel.opQuoteByCompany(email, from, number, (_+_))
     UserModel.opTransaction(email, BuyAction, from, price, number)
 
-    if (!(user.achievements.exists {achId => achId == Achievements.firstBuy}))
+    if (!(user.achievements.exists {achId => achId == Achievements.firstBuy.id}))
       UserModel.addAchievement(email, Achievements.firstBuy)
 
     val (rawScore, earned, score) = Scoring.updateScoreBuy(user, from, price, number, tradePrice)
+
+    if (!(user.achievements.exists {achId => achId == Achievements.riskyInvestments.id}))
+      UserModel.addAchievement(email, Achievements.riskyInvestments)
 
     (earned, score)
   }
@@ -72,7 +75,23 @@ object Transaction {
 
     val (rawScore, earned, score) = Scoring.updateScoreSell(user, from, price, number, tradePrice)
 
-    // if (rawScore < 0) 
+
+    if (!(user.achievements.exists {achId => achId == Achievements.firstSell.id}))
+      UserModel.addAchievement(email, Achievements.firstSell)
+
+    if (!(user.achievements.exists {achId => achId == Achievements.smallGain.id})
+      && rawScore < 0)
+      UserModel.addAchievement(email, Achievements.lostMoney)
+    if (!(user.achievements.exists {achId => achId == Achievements.smallGain.id})
+      && rawScore == 1)
+      UserModel.addAchievement(email, Achievements.smallGain)
+    if (!(user.achievements.exists {achId => achId == Achievements.goodGain.id})
+      && rawScore == 2)
+      UserModel.addAchievement(email, Achievements.goodGain)
+    if (!(user.achievements.exists {achId => achId == Achievements.doubleGain.id})
+      && rawScore == 10)
+      UserModel.addAchievement(email, Achievements.doubleGain)
+
     (earned, score)
   }
 

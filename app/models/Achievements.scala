@@ -16,10 +16,12 @@ object Achievements {
     Achievement(4, "Small gain", "You've earned less than 5% of the original price.")
   val goodGain =
     Achievement(5, "Not so small gain", "Hey, you've earned at least 5% of the original price you bought, that's good!")
-  val doubleGain= 
+  val doubleGain = 
     Achievement(6, "Investments master", "As if earning money wasn't enough, you even doubled your investment")
+  val riskyInvestments =
+    Achievement(7, "I now what I'm doing", "You've bought a stock while its value is pretty high, that's risky!")
 
-  val achievements = signup :: firstBuy :: firstSell :: lostMoney :: smallGain :: goodGain :: doubleGain :: Nil
+  val achievements = signup :: firstBuy :: firstSell :: lostMoney :: smallGain :: goodGain :: doubleGain :: riskyInvestments :: Nil
 
   def toAchievement(id: Int) =
     achievements.find {ach => ach.id == id}
