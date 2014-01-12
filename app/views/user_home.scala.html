@@ -5,13 +5,15 @@
 <link href="@routes.Assets.at("stylesheets/home.css")"
       rel="stylesheet" />
 } {
-<div id="top_panel">
+<div id="top_panel" class="well" >
+	<center>
   <div class="score_panel">
     <h2>Score : <span class="score">@user.score</span> </h2>
   </div>
   <div class="capital_panel">
     <h2>Capital : <span class="capital">@{"%1.2f" format user.capital}</span> </h2>
   </div>
+	</center>
 </div>
 
 
@@ -74,18 +76,30 @@ You have <span class="red-em">no quotes</span>.
   </div>
   <div>
     <h2>Mes Transactions</h2>
-    <ul>
+    <table class="table table-hover table-striped">
+			<tr>
+				<th>Operation</th>
+				<th>Action</th>
+				<th>Quant.</th>
+				<th>Valeur</th>
+				<th>prix unit.</th>
+				<th>Capital</th>
+			</tr>
       @for(transaction <- user.transactions.reverse) {
-													<li>
+													<tr>
 														@transaction.action match {
-														case BuyAction => { <span class="buy">Achat</span> }
-        case SellAction => { <span class="sell">Vente</span> }
-        case _ => { @transaction.action }
+														case BuyAction => { <td class="buy">Achat</td> }
+        case SellAction => { <td class="sell">Vente</td> }
+        case _ => { <td class="sell">@transaction.action</td> }
         }
-        : @transaction.number <a href="quote/@transaction.quote">@transaction.quote</a> pour
-        @{transaction.number * transaction.price} (prix unit. @transaction.price) ; @transaction.capital </li>
+				<td><a href="quote/@transaction.quote">@transaction.quote</td>
+        <td>@transaction.number</td>
+        <td>@{transaction.number * transaction.price}</td>
+				<td>@transaction.price</td>
+				<td>@transaction.capital</td>
+      </tr>
 }
-</ul>
+</table>
 }
 
 </div>
