@@ -1,4 +1,5 @@
-@(user : User, messages : Iterable[Message], quotes_with_prices : Iterable[(String, Int, Option[(QuoteInfo, List[(String, Double)])])])(implicit request : Request[Any])
+@(user : User, messages : Iterable[Message], quotes_with_prices : Iterable[(String, Int, Option[(QuoteInfo, List[(String, Double)])])],
+achievements : Iterable[Option[Achievement]])(implicit request : Request[Any])
 
 
 @header_main("Yolo - Home") {
@@ -130,10 +131,19 @@ You have <span class="red-em">no quotes</span>.
 
 		}
 	</div>
-</div>
+    </div>
     <div>
-        <h2>My achievements</h2>
-        @user.achievements.toString
+        @if(!achievements.isEmpty){
+        <div>
+            <h2>My Achievements</h2>
+            @for(ach <- achievements) {
+            @ach match {
+            case Some(ach) => { <h3>@ach.name</h3>@ach.desc }
+            case None => {}
+            }
+            }
+        </div>
+        }
     </div>
 </div>
 
@@ -143,7 +153,7 @@ You have <span class="red-em">no quotes</span>.
 
 @if(!quotes_with_prices.isEmpty){
   <div>
-    <h2>Mes Graphs</h2>
+    <h2>My Graphs</h2>
     @for((name, number, quoteInfoHistory) <- quotes_with_prices if number > 0) {
       @quoteInfoHistory match {
       case Some((quoteInfo, history)) => { <h3>@quoteInfo.name - @quoteInfo.longName</h3>@chart(history) }

@@ -16,6 +16,7 @@ object Scoring {
       if (percent < 5) 1
       else if (percent < 10) 2
       else if (percent < 15) 3
+      else if (percent >= 100) 10
       else 4
   
     if (diff < 0) -score else score

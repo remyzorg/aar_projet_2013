@@ -18,22 +18,24 @@ object Achievements {
     Achievement(5, "Not so small gain", "Hey, you've earned at least 5% of the original price you bought, that's good!")
   val doubleGain =
     Achievement(6, "Investments master", "As if earning money wasn't enough, you even doubled your investment")
+  val riskyInvestments =
+    Achievement(7, "I know what I'm doing", "You've bought a stock while its value is pretty high, that's risky!")
   val tenthBuy =
-    Achievement(7, "Good call taker", "You've bought your tenth stock, monopoly has no secrets for you isn't it ?")
+    Achievement(8, "Good call taker", "You've bought your tenth stock, monopoly has no secrets for you isn't it ?")
   val hundredthBuy =
-    Achievement(8, "Money whisperer", "You've bought your hundredth stock, well your jewellery box is growing.")
+    Achievement(9, "Money whisperer", "You've bought your hundredth stock, well your jewellery box is growing.")
   val thousandBuy =
-    Achievement(9, "Begin to buy", "At your thousandth stock bought, you're just starting to earn, at last.")
+    Achievement(10, "Begin to buy", "At your thousandth stock bought, you're just starting to earn, at last.")
   val tenthSell =
-    Achievement(10, "Good servant", "You've sold your tenth stock, you've sold as much as your neighbor at the last yard sale !")
+    Achievement(11, "Good servant", "You've sold your tenth stock, you've sold as much as your neighbor at the last yard sale !")
   val hundredthSell =
-    Achievement(11, "Sell me this pen", "You've sold your hundredth stock, you can now buy this book that explain what is trading.")
+    Achievement(12, "Sell me this pen", "You've sold your hundredth stock, you can now buy this book that explain what is trading.")
   val thousandSell =
-    Achievement(12, "Begin to sell", "Thousandth sell, impressive, welcome to the beginning of trading.")
+    Achievement(13, "Begin to sell", "Thousandth sell, impressive, welcome to the beginning of trading.")
   val allNight =
-    Achievement(13, "All nighter", "You're trading buy night, indeed, stocks won't trade by themselves.")
+    Achievement(14, "All nighter", "You're trading buy night, indeed, stocks won't trade by themselves.")
 
-  val achievements = signup :: firstBuy :: firstSell :: lostMoney :: smallGain :: goodGain :: doubleGain ::
+  val achievements = signup :: firstBuy :: firstSell :: lostMoney :: smallGain :: goodGain :: doubleGain :: riskyInvestments ::
     tenthBuy :: hundredthBuy :: thousandBuy :: tenthSell :: hundredthSell :: thousandSell :: allNight :: Nil
 
   def toAchievement(id: Int) =

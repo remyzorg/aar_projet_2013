@@ -27,7 +27,9 @@ object Application extends Controller with SecuredAsync {
     }.map {values =>
       val messages = Message.getAllUnreadMessages(user_data).toList
       for(message <- messages) Message.setRead(message)
-      Ok(views.html.user_home(user_data, messages, values))
+      val achievements = user_data.achievements.map 
+      { ach => models.Achievements.toAchievement(ach) }
+      Ok(views.html.user_home(user_data, messages, values, achievements))
     }
   }
 }

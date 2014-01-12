@@ -47,6 +47,9 @@ object Transaction {
 
     val (rawScore, earned, score) = Scoring.updateScoreBuy(user, from, price, number, tradePrice)
 
+    if (!(user.achievements.exists {achId => achId == Achievements.riskyInvestments.id}))
+      UserModel.addAchievement(email, Achievements.riskyInvestments)
+
     (earned, score)
   }
 
@@ -76,7 +79,12 @@ object Transaction {
 
     val (rawScore, earned, score) = Scoring.updateScoreSell(user, from, price, number, tradePrice)
 
-    // if (rawScore < 0) 
+    AchievementsUnlocker.unlockFirstSell(user)
+    AchievementsUnlocker.unlockLotOfSells(user)
+    AchievementsUnlocker.unlockMoneyGain(user, rawScore)
+
+
+
     (earned, score)
   }
 

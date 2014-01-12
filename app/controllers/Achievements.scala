@@ -61,4 +61,15 @@ object AchievementsUnlocker {
       simplyUnlockAchievement(user, Achievements.tenthSell)
     }
   }
+
+  def unlockMoneyGain(user: User, rawScore : Int) = {
+    if (rawScore < 0)
+      simplyUnlockAchievement(user, Achievements.lostMoney)
+    else if (rawScore == 1)
+      simplyUnlockAchievement(user, Achievements.smallGain)
+    else if (rawScore == 2)
+      simplyUnlockAchievement(user, Achievements.goodGain)
+    else if (rawScore == 10)
+      simplyUnlockAchievement(user, Achievements.doubleGain)
+  }
 }
