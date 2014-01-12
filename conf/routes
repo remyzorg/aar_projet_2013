@@ -52,4 +52,7 @@ GET    /quote/sub/:from/:value      controllers.Debug.opQuote(from:String,value:
 GET    /capital/add/:value      controllers.Debug.opCapital(value:Double, op : Boolean=true)
 GET    /capital/sub/:value      controllers.Debug.opCapital(value:Double, op : Boolean=false)
 
+GET    /transaction/buy/:from/:price/:number controllers.Debug.opTransaction(from, price:Double, number:Int, action: OpAction = BuyAction)
+GET    /transaction/sell/:from/:price/:number controllers.Debug.opTransaction(from, price:Double, number:Int, action: OpAction = SellAction)
+
 GET    /users/updateall         controllers.Debug.update

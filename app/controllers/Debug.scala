@@ -31,6 +31,20 @@ object Debug extends Controller with Secured{
         "current: " + current)
     }
 
+  def opTransaction (from: String, price: Double, number: Int, action: OpAction) = 
+    withuser { user => implicit request =>
+      val fromUpper = from.toUpper
+      val (tradePrice, operation) =
+        action match {
+          case act: SellAction =>
+            (price * 0.97, Transaction.sell _)
+          case act: BuyAction =>
+            (price * 1.03, Transaction.buy _)
+        }
+
+      operation(user.email, fromUpper, price, number, tradePrice)
+  }
+
 
   def print = Action {
     UserModel.printAll;
