@@ -101,8 +101,8 @@ achievements : Iterable[Option[Achievement]])(implicit request : Request[Any])
 													<tr>
 														<td>@DateTime.parse(transaction.date).toString("MM-dd-yyyy")</td>
 														@transaction.action match {
-														case BuyAction => { <td class="buy">Achat</td> }
-        case SellAction => { <td class="sell">Vente</td> }
+														case BuyAction => { <td class="buy">Buy</td> }
+        case SellAction => { <td class="sell">Sell</td> }
         case _ => { <td class="sell">@transaction.action</td> }
         }
 				<td><a href="quote/@transaction.quote">@transaction.quote</td>
