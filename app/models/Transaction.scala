@@ -47,8 +47,7 @@ object Transaction {
 
     val (rawScore, earned, score) = Scoring.updateScoreBuy(user, from, price, number, tradePrice)
 
-    if (!(user.achievements.exists {achId => achId == Achievements.riskyInvestments.id}))
-      UserModel.addAchievement(email, Achievements.riskyInvestments)
+    AchievementsUnlocker.unlockRiskyInvestments(user, rawScore)
 
     (earned, score)
   }

@@ -25,6 +25,10 @@ object AchievementsUnlocker {
 
   def unlockFirstBuy(user : User) = simplyUnlockAchievement(user, Achievements.firstBuy)
   def unlockFirstSell(user : User) = simplyUnlockAchievement(user, Achievements.firstSell)
+  def unlockRiskyInvestments(user: User, rawScore) =
+    if (rawScore > 0)
+      simplyUnlockAchievement(user, Achievements.riskyInvestements)
+
 
   def unlockLotOfBuys(user: User) = {
     val buyNumber = user.transactions.foldLeft(0) {
