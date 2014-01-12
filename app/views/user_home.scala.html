@@ -1,4 +1,5 @@
-@(user : User, quotes_with_prices : Iterable[(String, Int, Option[(QuoteInfo, List[(String, Double)])])])(implicit request : Request[Any])
+@(user : User, quotes_with_prices : Iterable[(String, Int, Option[(QuoteInfo,
+List[(String, Double)])])], achievements: Iterable[Option[Achievement]])(implicit request : Request[Any])
 
 
 @header_main("Yolo - Home") {
@@ -134,6 +135,20 @@ You have <span class="red-em">no quotes</span>.
     @for((name, number, quoteInfoHistory) <- quotes_with_prices if number > 0) {
       @quoteInfoHistory match {
       case Some((quoteInfo, history)) => { <h3>@quoteInfo.name</h3>@chart(history) }
+      case None => {}
+      }
+      }
+  </div>
+</div>
+}
+
+@if(!achievements.isEmpty){
+<div id="right_col">
+  <div>
+    <h2>Mes Succès</h2>
+    @for(ach <- achievements) {
+      @ach match {
+      case Some(ach) => { <h3>@ach.name</h3>@ach.desc }
       case None => {}
       }
       }

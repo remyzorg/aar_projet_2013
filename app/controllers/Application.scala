@@ -29,7 +29,9 @@ object Application extends Controller with SecuredAsync {
           case e :  JsResultException => None }
       } yield (quote, quantity, quoteInfoHistory)
     }.map {values =>
-      Ok(views.html.user_home(user_data, values))
+      val achievements = user_data.achievements.map 
+      { ach => models.Achievements.toAchievement(ach) }
+      Ok(views.html.user_home(user_data, values, achievements))
     }
   }
 }
