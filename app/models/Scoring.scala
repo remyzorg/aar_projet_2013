@@ -29,6 +29,7 @@ object Scoring {
       val history = Historic.parseResponse(result)
       val sum = history.map({value => value._2}).sum
       val mean = sum / history.length
+      println(tradePrice + "; " + mean)
 
       val diff = tradePrice - mean
       val percent = (Math.abs(diff) / mean) * 100
@@ -60,7 +61,7 @@ object Scoring {
 
   def updateScoreBuy(user: User, from: String, price: Double, number: Int,
     tradePrice: Double): (Int, Int, Int) = {
-    val rawScore = riskValue(price, from)
+    val rawScore = riskValue(tradePrice, from)
     val score = rawScore * number
     UserModel.opIncScore(user.email, score)
     (rawScore, score, user.score + score)

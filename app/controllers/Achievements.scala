@@ -25,9 +25,9 @@ object AchievementsUnlocker {
 
   def unlockFirstBuy(user : User) = simplyUnlockAchievement(user, Achievements.firstBuy)
   def unlockFirstSell(user : User) = simplyUnlockAchievement(user, Achievements.firstSell)
-  def unlockRiskyInvestments(user: User, rawScore) =
+  def unlockRiskyInvestments(user: User, rawScore: Int) =
     if (rawScore > 0)
-      simplyUnlockAchievement(user, Achievements.riskyInvestements)
+      simplyUnlockAchievement(user, Achievements.riskyInvestments)
 
 
   def unlockLotOfBuys(user: User) = {
@@ -76,4 +76,6 @@ object AchievementsUnlocker {
     else if (rawScore == 10)
       simplyUnlockAchievement(user, Achievements.doubleGain)
   }
+
+  def unlockSignup(user : User) = simplyUnlockAchievement(user, Achievements.signup)
 }

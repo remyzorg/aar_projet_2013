@@ -49,10 +49,13 @@ object Signup extends Controller {
     form.bindFromRequest.fold (
       errors => BadRequest(views.html.signup(errors)),
       user => user match { case (email, username, password, confirm) =>
-        UserModel.create (User (new ObjectId(),
-          email, username, Transaction.START_CAPITAL, 
-          Map(), Nil, 0, Nil, Achievements.signup.id :: Nil), 
-          password);
+        val user = User (new ObjectId(),
+          email, username, Transaction.START_CAPITAL,
+          Map(), Nil, 0, Nil, Achievements.signup.id :: Nil)
+        UserModel.create (user, password);
+
+        AchievementsUnlocker.unlockSignup(user);
+
         Redirect(routes.Application.index)
           .withSession(Security.username -> email)
       }
