@@ -5,9 +5,21 @@
       rel="stylesheet" />
 } {
 <div class="container">
-  <ul>
+  <h2>Friends ranking :</h2>
+  <table class="table table-hover">
+    <tr>
+      <th>Pos.</th>
+      <th>Username</th>
+      <th>Capital</th>
+      <th>Score</th>
+    </tr>
     @for(r <- rank) {
-      <li> @r.username: @r.capital, @r.score </li>
+      <tr>
+        <td>@(rank.indexOf(r) + 1)</td>
+        <td>@r.username</td>
+        <td>@r.capital</td>
+        <td>@r.score </td>
+      </tr>
     }
   </ul>
 </div>
